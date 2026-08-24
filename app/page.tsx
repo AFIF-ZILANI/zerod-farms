@@ -106,9 +106,14 @@ export default function Home() {
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-ivory-shell/95 backdrop-blur-sm border-b border-steel-mesh/20" aria-label="Main navigation">
-        <div className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-content mx-auto px-6 h-12 flex items-center justify-between">
           <a href="#" className="font-display text-lg font-bold text-ink-black tracking-tight">
-            {SITE.name}
+            <Image 
+            src="/zerod-farms-logo.svg"
+            alt="ZeroD Farms"
+            width={110}
+            height={30}
+            />
           </a>
 
           {/* Desktop nav */}
@@ -164,27 +169,67 @@ export default function Home() {
 
       <main id="main" className="flex-1">
         {/* Hero */}
-        <section className="relative">
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+        <section className="relative h-[85vh] min-h-[500px] max-h-[800px]">
+          <div className="absolute inset-0 overflow-hidden">
             <Image
               src="/images/hero.jpg"
               alt="Interior of a modern poultry farm shed with feeding systems"
               fill
-              className="object-cover grayscale contrast-110 brightness-75"
+              className="object-cover grayscale contrast-110 brightness-[0.6]"
               priority
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-ink-black/20" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-              <h1 className="font-display text-display-xl font-bold text-ivory-shell mb-4 max-w-2xl">
+            <div className="absolute inset-0 bg-gradient-to-r from-ink-black/85 via-ink-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-black/60 via-transparent to-transparent" />
+          </div>
+
+          <div className="relative h-full max-w-content mx-auto px-6 flex flex-col justify-end pb-20 md:pb-24">
+            <AnimateOnScroll>
+              {/* Eyebrow */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex gap-1" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="w-0.5 h-3 bg-barind-rust" />
+                  ))}
+                </div>
+                <span className="font-mono text-caption text-ivory-shell/70 uppercase tracking-widest">
+                  Naogaon, Bangladesh
+                </span>
+              </div>
+
+              {/* Headline */}
+              <h1 className="font-display text-display-xl md:text-[4rem] font-bold text-ivory-shell mb-3 max-w-xl leading-[1.05]">
                 {SITE.name}
               </h1>
-              <p className="font-body text-body-l text-ivory-shell/90 mb-8">
-                Poultry farm in Naogaon, Bangladesh
+
+              {/* Tagline */}
+              <p className="font-body text-body-l text-ivory-shell/80 mb-6 max-w-md">
+                Poultry farm in Naogaon, Bangladesh — healthy food, for everyone.
               </p>
-              <Button href={`tel:${SITE.phone}`} variant="primary">
-                Call now
-              </Button>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row items-start gap-4">
+                <Button href={`tel:${SITE.phone}`} variant="primary">
+                  Call now
+                </Button>
+                <a
+                  href="#production"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-ivory-shell/80 hover:text-ivory-shell font-body text-body-m transition-colors"
+                >
+                  Learn more
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M12 5v14M19 12l-7 7-7-7" />
+                  </svg>
+                </a>
+              </div>
+            </AnimateOnScroll>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+            <span className="font-mono text-[10px] text-ivory-shell/40 uppercase tracking-widest">Scroll</span>
+            <div className="w-5 h-8 border border-ivory-shell/30 rounded-full flex justify-center pt-1.5">
+              <div className="w-1 h-2 bg-ivory-shell/50 rounded-full" />
             </div>
           </div>
         </section>
