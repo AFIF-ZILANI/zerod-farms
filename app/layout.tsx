@@ -23,6 +23,36 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://zerodfarms.vercel.app/#business",
+  name: "ZeroD Farms",
+  description:
+    "Poultry farm in Mahadebpur, Naogaon, Bangladesh — production with 5 sheds and 10,000-bird capacity.",
+  url: "https://zerodfarms.vercel.app",
+  telephone: "+8801341570410",
+  email: "zerodfarms@gmail.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "West Kazipara, Kundona, Fotepur Madrasa Road",
+    addressLocality: "Mahadebpur",
+    addressRegion: "Naogaon",
+    postalCode: "6530",
+    addressCountry: "BD",
+  },
+  foundingDate: "2019-12-31",
+  founder: {
+    "@type": "Person",
+    name: "Kazi Bahalul Arfin",
+  },
+  parentOrganization: {
+    "@type": "Organization",
+    name: "ZeroD",
+    url: "https://zerod.vercel.app",
+  },
+};
+
 export const metadata: Metadata = {
   title: "ZeroD Farms — Poultry Farm in Naogaon, Bangladesh",
   description:
@@ -35,6 +65,10 @@ export const metadata: Metadata = {
     "Sonali",
     "ZeroD Farms",
   ],
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     type: "website",
     title: "ZeroD Farms — Poultry Farm in Naogaon, Bangladesh",
@@ -61,44 +95,11 @@ export default function RootLayout({
       lang="en"
       className={`${zillaSlab.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <head>
+      <body className="min-h-full flex flex-col">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "@id": "https://zerodfarms.vercel.app/#business",
-              name: "ZeroD Farms",
-              description:
-                "Poultry farm in Mahadebpur, Naogaon, Bangladesh — production with 5 sheds and 10,000-bird capacity.",
-              url: "https://zerodfarms.vercel.app",
-              telephone: "+8801341570410",
-              email: "zerodfarms@gmail.com",
-              address: {
-                "@type": "PostalAddress",
-                streetAddress:
-                  "West Kazipara, Kundona, Fotepur Madrasa Road",
-                addressLocality: "Mahadebpur",
-                addressRegion: "Naogaon",
-                postalCode: "6530",
-                addressCountry: "BD",
-              },
-              foundingDate: "2019-12-31",
-              founder: {
-                "@type": "Person",
-                name: "Kazi Bahalul Arfin",
-              },
-              parentOrganization: {
-                "@type": "Organization",
-                name: "ZeroD",
-                url: "https://zerod.vercel.app",
-              },
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </head>
-      <body className="min-h-full flex flex-col font-body">
         {children}
       </body>
     </html>
