@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { SectionDivider } from "./components/SectionDivider";
 import { Button } from "./components/Button";
 import { Card } from "./components/Card";
-import { PlaceholderBlock } from "./components/PlaceholderBlock";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
 import {
   SITE,
@@ -108,9 +108,16 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative">
-          <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
-            <PlaceholderBlock aspectRatio="16/9" label="PHOTO — 16:9" className="w-full h-full" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-black/75 to-ink-black/10" />
+          <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+            <Image
+              src="/images/hero.jpg"
+              alt="Interior of a modern poultry farm shed with feeding systems"
+              fill
+              className="object-cover grayscale contrast-110 brightness-75"
+              priority
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-ink-black/20" />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
               <h1 className="font-display text-display-xl font-bold text-ivory-shell mb-4 max-w-2xl">
                 {SITE.name}
@@ -159,9 +166,21 @@ export default function Home() {
             </p>
           </AnimateOnScroll>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <AnimateOnScroll key={i} delay={i * 60}>
-                <PlaceholderBlock aspectRatio="4/5" label={`PHOTO — 4:5`} />
+            {[
+              { src: "/images/gallery-1.jpg", alt: "Brown Sonali chickens feeding inside a shed at ZeroD Farms" },
+              { src: "/images/gallery-2.jpg", alt: "Close-up of healthy poultry birds in natural light" },
+              { src: "/images/gallery-3.jpg", alt: "Colorful rooster on the farm premises" },
+            ].map((img, i) => (
+              <AnimateOnScroll key={img.src} delay={i * 60}>
+                <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4/5" }}>
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-cover grayscale contrast-110 hover:grayscale-0 hover:contrast-100 transition-all duration-500"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
               </AnimateOnScroll>
             ))}
           </div>
