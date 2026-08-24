@@ -9,21 +9,28 @@
   --color-ivory-shell: #F7F1E4;
   --color-paper-white: #FFFDF8;
 
-  /* Fonts */
+  /* Typography scale — design system sizes */
+  --text-display-xl: 3.5rem;
+  --text-display-l: 2.5rem;
+  --text-display-m: 1.75rem;
+  --text-body-l: 1.125rem;
+  --text-body-m: 1rem;
+  --text-caption: 0.8125rem;
+
+  /* Line heights */
+  --leading-display-xl: 1.05;
+  --leading-display-l: 1.1;
+  --leading-display-m: 1.2;
+  --leading-body: 1.6;
+  --leading-caption: 1.4;
+
+  /* Font families */
   --font-display: var(--font-zilla-slab), "Zilla Slab", serif;
   --font-body: var(--font-ibm-plex-sans), "IBM Plex Sans", sans-serif;
   --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", monospace;
 
-  /* Spacing scale (8px base) */
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-4: 16px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
-  --spacing-24: 96px;
-  --spacing-32: 128px;
+  /* Scroll offset for sticky nav */
+  --scroll-mt: 4rem;
 }
 
 /* Base */
@@ -35,34 +42,39 @@ body {
   background-color: var(--color-ivory-shell);
   color: var(--color-ink-black);
   font-family: var(--font-body);
+  font-size: var(--text-body-m);
+  line-height: var(--leading-body);
 }
 
-/* Typography utilities */
-.font-display {
-  font-family: var(--font-display);
+/* Scroll offset for anchor links (sticky nav height) */
+[id] {
+  scroll-margin-top: var(--scroll-mt);
 }
 
-.font-body {
-  font-family: var(--font-body);
+/* Layout utilities */
+.section-padding {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
 }
 
-.font-data {
-  font-family: var(--font-mono);
-}
-
-/* Tick-mark divider animation */
-@keyframes tick-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
   }
 }
 
-/* Scroll animation base */
+.max-w-content {
+  max-width: 70rem;
+}
+
+/* Minimum touch target (44x44px per WCAG) */
+.min-touch {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Scroll animation */
 .animate-fade-in {
   opacity: 0;
   transform: translateY(8px);

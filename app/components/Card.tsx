@@ -14,7 +14,7 @@ export function Card({ title, description, icon, className = "" }: CardProps) {
       <h3 className="font-display text-display-m font-semibold text-ink-black mb-2">
         {title}
       </h3>
-      <p className="text-body-m text-steel-mesh">{description}</p>
+      <p className="font-body text-body-m text-steel-mesh">{description}</p>
     </div>
   );
 }
