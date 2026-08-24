@@ -299,56 +299,89 @@ export default function Home() {
         <SectionDivider />
 
         {/* Contact */}
-        <section id="contact" className="py-24 px-6 bg-ink-black text-ivory-shell">
-          <div className="max-w-[1120px] mx-auto">
+        <section id="contact" className="relative bg-ink-black text-ivory-shell">
+          <div className="py-24 px-6 max-w-[1120px] mx-auto">
             <AnimateOnScroll>
-              <h2 className="font-display text-display-l font-semibold text-ivory-shell mb-4">
-                Contact
-              </h2>
-              <p className="font-data text-caption text-steel-mesh mb-12 uppercase tracking-widest">
-                Get in touch
-              </p>
+              <div className="text-center mb-16">
+                <p className="font-data text-caption text-barind-rust uppercase tracking-widest mb-4">
+                  Get in touch
+                </p>
+                <h2 className="font-display text-display-l font-semibold text-ivory-shell">
+                  Contact
+                </h2>
+              </div>
             </AnimateOnScroll>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {CONTACT_LINKS.map((link, i) => (
                 <AnimateOnScroll key={link.label} delay={i * 60}>
                   <a
                     href={link.href}
-                    className="flex flex-col items-center text-center p-6 rounded-lg border border-steel-mesh/30 hover:border-barind-rust transition-colors min-h-[44px] min-w-[44px]"
+                    className="group flex flex-col items-center text-center p-8 rounded-lg border border-steel-mesh/20 hover:border-barind-rust/60 transition-all duration-300 min-h-[44px] min-w-[44px]"
                   >
-                    <span className="text-barind-rust mb-3">
-                      {ICONS[link.icon]}
-                    </span>
-                    <span className="font-display text-body-m font-semibold text-ivory-shell">
+                    <div className="w-14 h-14 rounded-full bg-barind-rust/10 flex items-center justify-center mb-5 group-hover:bg-barind-rust/20 transition-colors">
+                      <span className="text-barind-rust">
+                        {ICONS[link.icon]}
+                      </span>
+                    </div>
+                    <span className="font-display text-body-l font-semibold text-ivory-shell mb-1">
                       {link.label}
+                    </span>
+                    <span className="font-data text-caption text-steel-mesh">
+                      {link.icon === "phone" && SITE.phone}
+                      {link.icon === "whatsapp" && "Chat on WhatsApp"}
+                      {link.icon === "email" && SITE.email}
                     </span>
                   </a>
                 </AnimateOnScroll>
               ))}
             </div>
+
             <AnimateOnScroll>
-              <address className="not-italic font-data text-caption text-steel-mesh text-center leading-relaxed">
-                {SITE.address}
-              </address>
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-barind-rust">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <span className="font-data text-caption text-steel-mesh uppercase tracking-widest">
+                    Visit us
+                  </span>
+                </div>
+                <address className="not-italic font-body text-body-m text-ivory-shell/80 leading-relaxed max-w-md">
+                  {SITE.address}
+                </address>
+              </div>
             </AnimateOnScroll>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="py-8 px-6 bg-ink-black border-t border-steel-mesh/20">
-        <div className="max-w-[1120px] mx-auto text-center">
-          <p className="font-data text-caption text-steel-mesh">
-            Part of{" "}
-            <a
-              href={SITE.parentUrl}
-              className="text-ivory-shell hover:text-barind-rust transition-colors underline underline-offset-2"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {SITE.parentBrand}
-            </a>
-          </p>
+      <footer className="bg-ink-black border-t border-steel-mesh/10">
+        <div className="max-w-[1120px] mx-auto px-6 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-display text-body-m font-semibold text-ivory-shell">
+                {SITE.name}
+              </span>
+              <span className="text-steel-mesh/40">·</span>
+              <span className="font-data text-caption text-steel-mesh">
+                Part of{" "}
+                <a
+                  href={SITE.parentUrl}
+                  className="text-ivory-shell/80 hover:text-barind-rust transition-colors underline underline-offset-2 decoration-steel-mesh/30 hover:decoration-barind-rust"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {SITE.parentBrand}
+                </a>
+              </span>
+            </div>
+            <p className="font-data text-caption text-steel-mesh/60">
+              &copy; {new Date().getFullYear()} {SITE.name}. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </>
