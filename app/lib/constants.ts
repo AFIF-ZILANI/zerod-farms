@@ -19,16 +19,19 @@ export const NAV_LINKS = [
 export const PRODUCTION_CARDS = [
   {
     title: "Broiler Rearing",
+    icon: "shed",
     description:
       "Raising Sonali birds from day-old chicks to market weight in controlled shed environments.",
   },
   {
     title: "Batch Tracking",
+    icon: "chart",
     description:
       "Every batch tracked from placement to harvest — feed conversion, mortality, weight gain logged daily.",
   },
   {
     title: "Local Supply",
+    icon: "truck",
     description:
       "Direct supply to local buyers and wholesalers across Naogaon and surrounding districts.",
   },
@@ -53,4 +56,12 @@ export const CONTACT_LINKS = [
   { label: "Call", href: `tel:${SITE.phone}`, icon: "phone" },
   { label: "WhatsApp", href: SITE.whatsapp, icon: "whatsapp" },
   { label: "Email", href: `mailto:${SITE.email}`, icon: "email" },
+] as const;
+
+// Operational figures — surfaced as the farm's credibility at a glance.
+export const STATS = [
+  { value: "2019", label: "Established" },
+  { value: "5", label: "Active sheds" },
+  { value: "10,000", label: "Bird capacity" },
+  { value: "~5,000", label: "Birds / month" },
 ] as const;
