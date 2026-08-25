@@ -4,7 +4,8 @@ export const SITE = {
   phone: "+8801341570410",
   whatsapp: "https://wa.me/8801341570410",
   email: "zerodfarms@gmail.com",
-  address: "West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530",
+  address:
+    "West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530",
   parentBrand: "ZeroD",
   parentUrl: "https://zerod.vercel.app",
 } as const;
@@ -41,12 +42,14 @@ export const FARM_ABOUT =
   "ZeroD Farms started on 31 December 2019, when Kazi Bahalul Arfin set up the first shed in Naogaon with 2,500 Sonali birds. Six years on, we run five sheds with capacity for 10,000 birds and produce around 5,000 birds a month for local buyers and wholesalers, on Leader Feed. We're building our own tools — a farm dashboard, an employee app for daily shed work, and PoultryScale — to run a farm that's more digital, more efficient, and lighter on the environment. The goal hasn't moved since day one: healthy food, for everyone.";
 
 export const TIMELINE = [
-  { year: "2019", event: "Founded by Kazi Bahalul Arfin — first shed, 2,500 Sonali birds" },
-  { year: "2026", event: "5 sheds, 10,000-bird capacity, ~5,000 birds per month" },
-] as const;
-
-export const TEAM = [
-  { name: "Kazi Bahalul Arfin", role: "Founder" },
+  {
+    year: "2019",
+    event: "Founded by Kazi Bahalul Arfin — first shed, 2,500 Sonali birds",
+  },
+  {
+    year: "2026",
+    event: "5 sheds, 10,000-bird capacity, ~5,000 birds per month",
+  },
 ] as const;
 
 export const DATASET_COPY =
