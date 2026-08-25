@@ -11,7 +11,6 @@ import {
   STATS,
   FARM_ABOUT,
   TIMELINE,
-  TEAM,
   DATASET_COPY,
   CONTACT_LINKS,
 } from "./lib/constants";
@@ -386,41 +385,6 @@ export default function Home() {
                     </span>
                     <p className="font-body text-body-m text-steel-mesh mt-2 max-w-md">
                       {item.event}
-                    </p>
-                  </div>
-                </AnimateOnScroll>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <SectionDivider />
-
-        {/* Team */}
-        <section id="team" className="section-padding px-6">
-          <div className="max-w-content mx-auto">
-            <AnimateOnScroll>
-              <h2 className="font-display text-display-l font-semibold text-ink-black mb-4">
-                Our Team
-              </h2>
-              <p className="font-mono text-caption text-steel-mesh mb-12 uppercase tracking-widest">
-                The people
-              </p>
-            </AnimateOnScroll>
-            <div className="flex flex-wrap justify-center gap-8">
-              {TEAM.map((member) => (
-                <AnimateOnScroll key={member.name}>
-                  <div className="flex flex-col items-center text-center w-56">
-                    <div className="w-24 h-24 rounded-full bg-steel-mesh/20 border border-steel-mesh/30 flex items-center justify-center mb-4">
-                      <span className="font-display text-display-m text-steel-mesh">
-                        {member.name.charAt(0)}
-                      </span>
-                    </div>
-                    <h3 className="font-display text-body-m font-semibold text-ink-black">
-                      {member.name}
-                    </h3>
-                    <p className="font-mono text-caption text-steel-mesh">
-                      {member.role}
                     </p>
                   </div>
                 </AnimateOnScroll>
