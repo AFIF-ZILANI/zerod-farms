@@ -1,15 +1,14 @@
-"use client";
-
-import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { SectionDivider } from "./components/SectionDivider";
 import { Button } from "./components/Button";
 import { Card } from "./components/Card";
+import { Nav } from "./components/Nav";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
 import {
   SITE,
-  NAV_LINKS,
   PRODUCTION_CARDS,
+  STATS,
   FARM_ABOUT,
   TIMELINE,
   TEAM,
@@ -51,10 +50,46 @@ function MapPinIcon() {
   );
 }
 
-const ICONS: Record<string, React.ReactNode> = {
+function ShedIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 21V9l9-6 9 6v12" />
+      <path d="M3 21h18" />
+      <path d="M9 21v-6h6v6" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 3v18h18" />
+      <path d="m7 14 4-4 3 3 5-6" />
+    </svg>
+  );
+}
+
+function TruckIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M1 3h15v13H1z" />
+      <path d="M16 8h4l3 3v5h-7z" />
+      <circle cx="5.5" cy="18.5" r="2.5" />
+      <circle cx="18.5" cy="18.5" r="2.5" />
+    </svg>
+  );
+}
+
+const ICONS: Record<string, ReactNode> = {
   phone: <PhoneIcon />,
   whatsapp: <WhatsAppIcon />,
   email: <EmailIcon />,
+};
+
+const PRODUCTION_ICONS: Record<string, ReactNode> = {
+  shed: <ShedIcon />,
+  chart: <ChartIcon />,
+  truck: <TruckIcon />,
 };
 
 const GALLERY_IMAGES = [
@@ -64,36 +99,6 @@ const GALLERY_IMAGES = [
 ] as const;
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const closeMobileMenu = useCallback(() => {
-    setMobileMenuOpen(false);
-  }, []);
-
-  // Close mobile menu on Escape key
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeMobileMenu();
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [mobileMenuOpen, closeMobileMenu]);
-
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileMenuOpen]);
-
   return (
     <>
       {/* Skip to content */}
@@ -104,137 +109,86 @@ export default function Home() {
         Skip to content
       </a>
 
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-ivory-shell/95 backdrop-blur-sm border-b border-steel-mesh/20" aria-label="Main navigation">
-        <div className="max-w-content mx-auto px-6 h-12 flex items-center justify-between">
-          <a href="#" className="font-display text-lg font-bold text-ink-black tracking-tight">
-            <Image 
-            src="/zerod-farms-logo.svg"
-            alt="ZeroD Farms"
-            width={110}
-            height={30}
-            />
-          </a>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="font-mono text-caption text-steel-mesh hover:text-ink-black transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex flex-col gap-1.5 p-2 min-touch targets-center justify-center"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            <span className={`block w-5 h-0.5 bg-ink-black transition-transform duration-200 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
-            <span className={`block w-5 h-0.5 bg-ink-black transition-opacity duration-200 ${mobileMenuOpen ? "opacity-0" : ""}`} />
-            <span className={`block w-5 h-0.5 bg-ink-black transition-transform duration-200 ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-          </button>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div
-            id="mobile-menu"
-            className="md:hidden border-t border-steel-mesh/20 bg-ivory-shell"
-            role="dialog"
-            aria-label="Mobile navigation"
-          >
-            <div className="px-6 py-4 flex flex-col gap-4">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="font-mono text-body-m text-steel-mesh hover:text-ink-black transition-colors py-2"
-                  onClick={closeMobileMenu}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
+      <Nav />
 
       <main id="main" className="flex-1">
         {/* Hero */}
-        <section className="relative h-[85vh] min-h-[500px] max-h-[800px]">
+        <section id="hero" className="relative h-[90vh] min-h-[560px] max-h-[880px]">
           <div className="absolute inset-0 overflow-hidden">
             <Image
               src="/images/hero.jpg"
               alt="Interior of a modern poultry farm shed with feeding systems"
               fill
-              className="object-cover grayscale contrast-110 brightness-[0.6]"
+              className="object-cover grayscale contrast-110 brightness-[0.55]"
               priority
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-ink-black/85 via-ink-black/50 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-ink-black/90 via-ink-black/55 to-ink-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-black/80 via-ink-black/10 to-transparent" />
           </div>
 
-          <div className="relative h-full max-w-content mx-auto px-6 flex flex-col justify-end pb-20 md:pb-24">
+          <div className="relative h-full max-w-content mx-auto px-6 flex flex-col justify-end pb-20 md:pb-28">
             <AnimateOnScroll>
               {/* Eyebrow */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex gap-1" aria-hidden="true">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="w-0.5 h-3 bg-barind-rust" />
-                  ))}
-                </div>
-                <span className="font-mono text-caption text-ivory-shell/70 uppercase tracking-widest">
-                  Naogaon, Bangladesh
+              <div className="flex items-center gap-3 mb-5">
+                <span className="h-px w-8 bg-feed-gold" aria-hidden="true" />
+                <span className="font-mono text-caption text-ivory-shell/75 uppercase tracking-[0.2em]">
+                  Est. 2019 — Naogaon, Bangladesh
                 </span>
               </div>
 
               {/* Headline */}
-              <h1 className="font-display text-display-xl md:text-[4rem] font-bold text-ivory-shell mb-3 max-w-xl leading-[1.05]">
-                {SITE.name}
+              <h1 className="font-display font-bold text-ivory-shell tracking-tight leading-[1.02] text-[2.5rem] sm:text-display-xl md:text-[4.25rem] lg:text-[4.75rem] max-w-[17ch] mb-6">
+                Poultry raised right,{" "}
+                <span className="text-feed-gold">tracked to the last bird.</span>
               </h1>
 
-              {/* Tagline */}
-              <p className="font-body text-body-l text-ivory-shell/80 mb-6 max-w-md">
-                Poultry farm in Naogaon, Bangladesh — healthy food, for everyone.
+              {/* Subhead */}
+              <p className="font-body text-body-l text-ivory-shell/80 leading-relaxed max-w-xl mb-8">
+                A family-run Sonali poultry farm in Mahadebpur, Naogaon — five sheds,
+                10,000-bird capacity, every batch logged from day-old chick to market
+                weight.
               </p>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-start gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                 <Button href={`tel:${SITE.phone}`} variant="primary">
-                  Call now
+                  Call the farm
                 </Button>
                 <a
                   href="#production"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-ivory-shell/80 hover:text-ivory-shell font-body text-body-m transition-colors"
+                  className="group inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-lg border border-ivory-shell/30 text-ivory-shell font-body text-body-m hover:bg-ivory-shell hover:text-ink-black hover:border-ivory-shell transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ivory-shell"
                 >
-                  Learn more
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  See how we work
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="transition-transform group-hover:translate-y-0.5">
                     <path d="M12 5v14M19 12l-7 7-7-7" />
                   </svg>
                 </a>
               </div>
             </AnimateOnScroll>
           </div>
-
-          {/* Scroll indicator */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-            <span className="font-mono text-[10px] text-ivory-shell/40 uppercase tracking-widest">Scroll</span>
-            <div className="w-5 h-8 border border-ivory-shell/30 rounded-full flex justify-center pt-1.5">
-              <div className="w-1 h-2 bg-ivory-shell/50 rounded-full" />
-            </div>
-          </div>
         </section>
 
-        <SectionDivider />
+        {/* Stats — the farm at a glance, in the site's data voice */}
+        <section aria-label="Farm at a glance" className="bg-paper-white border-y border-steel-mesh/20">
+          <div className="max-w-content mx-auto px-6 py-10 md:py-14">
+            <dl className="grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
+              {STATS.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex flex-col-reverse items-center gap-2 text-center md:border-l md:border-steel-mesh/15 md:first:border-l-0"
+                >
+                  <dt className="font-mono text-caption text-steel-mesh uppercase tracking-widest">
+                    {stat.label}
+                  </dt>
+                  <dd className="font-mono text-display-m md:text-display-l text-ink-black tabular-nums leading-none">
+                    {stat.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
         {/* Production */}
         <section id="production" className="section-padding px-6">
@@ -250,7 +204,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {PRODUCTION_CARDS.map((card, i) => (
                 <AnimateOnScroll key={card.title} delay={i * 60}>
-                  <Card title={card.title} description={card.description} />
+                  <Card title={card.title} description={card.description} icon={PRODUCTION_ICONS[card.icon]} />
                 </AnimateOnScroll>
               ))}
             </div>
@@ -327,11 +281,11 @@ export default function Home() {
               {TIMELINE.map((item, i) => (
                 <AnimateOnScroll key={item.year} delay={i * 60}>
                   <div className="relative pl-8">
-                    <div className="absolute left-0 top-1 w-3 h-3 bg-barind-rust rounded-full -translate-x-[7px]" />
-                    <span className="font-mono text-caption text-barind-rust uppercase tracking-widest">
+                    <div className="absolute left-0 top-2 w-3 h-3 bg-barind-rust rounded-full -translate-x-[7px]" />
+                    <span className="font-display text-display-m text-barind-rust leading-none">
                       {item.year}
                     </span>
-                    <p className="font-body text-body-m text-ink-black mt-1">
+                    <p className="font-body text-body-m text-steel-mesh mt-2 max-w-md">
                       {item.event}
                     </p>
                   </div>
@@ -354,10 +308,10 @@ export default function Home() {
                 The people
               </p>
             </AnimateOnScroll>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <div className="flex flex-wrap justify-center gap-8">
               {TEAM.map((member) => (
                 <AnimateOnScroll key={member.name}>
-                  <div className="flex flex-col items-center text-center">
+                  <div className="flex flex-col items-center text-center w-56">
                     <div className="w-24 h-24 rounded-full bg-steel-mesh/20 border border-steel-mesh/30 flex items-center justify-center mb-4">
                       <span className="font-display text-display-m text-steel-mesh">
                         {member.name.charAt(0)}
@@ -494,7 +448,7 @@ export default function Home() {
               </span>
             </div>
             <p className="font-mono text-caption text-steel-mesh/60">
-              &copy; 2025 {SITE.name}. All rights reserved.
+              &copy; {new Date().getFullYear()} {SITE.name}. All rights reserved.
             </p>
           </div>
         </div>
