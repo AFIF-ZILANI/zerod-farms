@@ -7,6 +7,7 @@ import { Nav } from "./components/Nav";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
 import {
   SITE,
+  NAV_LINKS,
   PRODUCTION_CARDS,
   STATS,
   FARM_ABOUT,
@@ -437,81 +438,220 @@ export default function Home() {
         <section id="contact" className="bg-ink-black text-ivory-shell">
           <div className="section-padding px-6">
             <div className="max-w-content mx-auto">
+              {/* Header */}
               <AnimateOnScroll>
-                <div className="text-center mb-16">
-                  <p className="font-mono text-caption text-barind-rust uppercase tracking-widest mb-4">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="h-px w-8 bg-feed-gold" aria-hidden="true" />
+                  <span className="font-mono text-caption text-feed-gold uppercase tracking-[0.2em]">
                     Get in touch
-                  </p>
-                  <h2 className="font-display text-display-l font-semibold text-ivory-shell">
-                    Contact
+                  </span>
+                </div>
+                <div className="grid gap-5 md:grid-cols-2 md:items-end mb-14 md:mb-20">
+                  <h2 className="font-display text-display-l md:text-[3rem] font-bold text-ivory-shell leading-[1.05] max-w-[13ch]">
+                    Reach the farm directly.
                   </h2>
-                  <p className="font-body text-body-m text-ivory-shell/70 max-w-md mx-auto mt-4">
-                    For orders, wholesale enquiries, or to arrange a visit to
-                    the farm — reach us through any of the channels below.
+                  <p className="font-body text-body-m text-ivory-shell/70 leading-relaxed max-w-md md:justify-self-end">
+                    Orders, wholesale, or a visit to the sheds — you&rsquo;ll be
+                    talking to the family who runs ZeroD Farms, not a call
+                    center.
                   </p>
                 </div>
               </AnimateOnScroll>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                {CONTACT_LINKS.map((link, i) => (
-                  <AnimateOnScroll key={link.label} delay={i * 60}>
-                    <a
-                      href={link.href}
-                      className="group flex flex-col items-center text-center p-8 rounded-lg border border-steel-mesh/20 hover:border-barind-rust/60 hover:-translate-y-1 transition-all duration-300 min-h-11 min-w-11"
-                      {...(link.icon !== "phone"
-                        ? { target: "_blank", rel: "noopener noreferrer" }
-                        : {})}
-                    >
-                      <div className="w-14 h-14 rounded-full bg-barind-rust/10 flex items-center justify-center mb-5 group-hover:bg-barind-rust/20 transition-colors">
-                        <span className="text-barind-rust">
-                          {ICONS[link.icon]}
+              <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+                {/* Direct lines — a dispatch register */}
+                <div className="lg:col-span-7">
+                  <AnimateOnScroll>
+                    <p className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-2">
+                      Direct lines
+                    </p>
+                  </AnimateOnScroll>
+                  <div className="border-t border-steel-mesh/20">
+                    {CONTACT_LINKS.map((link, i) => (
+                      <AnimateOnScroll key={link.label} delay={i * 60}>
+                        <a
+                          href={link.href}
+                          {...(link.icon !== "phone"
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
+                          className="group flex items-center gap-4 sm:gap-6 border-b border-steel-mesh/20 py-5 sm:py-6 -mx-3 px-3 rounded-md hover:bg-ivory-shell/[0.03] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-feed-gold"
+                        >
+                          <span className="text-barind-rust group-hover:text-feed-gold transition-colors [&_svg]:h-5 [&_svg]:w-5">
+                            {ICONS[link.icon]}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block font-mono text-caption uppercase tracking-widest text-steel-mesh group-hover:text-ivory-shell transition-colors mb-1">
+                              {link.label}
+                            </span>
+                            <span className="block font-mono text-body-l text-ivory-shell tabular-nums truncate">
+                              {link.value}
+                            </span>
+                          </span>
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                            className="shrink-0 text-steel-mesh group-hover:text-feed-gold transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                          >
+                            <path d="M7 17 17 7M7 7h10v10" />
+                          </svg>
+                        </a>
+                      </AnimateOnScroll>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Location plate */}
+                <div className="lg:col-span-5">
+                  <AnimateOnScroll>
+                    <div className="rounded-lg border border-steel-mesh/25 bg-ivory-shell/[0.02] p-8">
+                      <div className="flex gap-1.5 mb-6" aria-hidden="true">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <span
+                            key={i}
+                            className="w-0.5 h-2.5 bg-feed-gold/80"
+                          />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <MapPinIcon />
+                        <span className="font-mono text-caption text-feed-gold uppercase tracking-widest">
+                          Visit the farm
                         </span>
                       </div>
-                      <span className="font-display text-body-l font-semibold text-ivory-shell mb-1">
-                        {link.label}
-                      </span>
-                      <span className="font-mono text-caption text-steel-mesh group-hover:text-ivory-shell/70 transition-colors break-all">
-                        {link.value}
-                      </span>
-                    </a>
+                      <address className="not-italic font-body text-body-l text-ivory-shell/90 leading-relaxed">
+                        {SITE.addressLines.map((line) => (
+                          <span key={line} className="block">
+                            {line}
+                          </span>
+                        ))}
+                      </address>
+                      <p className="font-mono text-caption text-steel-mesh leading-relaxed mt-5 pt-5 border-t border-steel-mesh/20">
+                        Call ahead so we can meet you at the gate.
+                      </p>
+                    </div>
                   </AnimateOnScroll>
-                ))}
-              </div>
 
-              <AnimateOnScroll>
-                <div className="flex flex-col items-center text-center">
-                  <div className="flex items-center gap-2 mb-3">
-                    <MapPinIcon />
-                    <span className="font-mono text-caption text-steel-mesh uppercase tracking-widest">
-                      Visit us
-                    </span>
-                  </div>
-                  <address className="not-italic font-body text-body-m text-ivory-shell/80 leading-relaxed max-w-md">
-                    {SITE.address}
-                  </address>
+                  <AnimateOnScroll delay={80}>
+                    <dl className="grid grid-cols-2 gap-6 mt-6">
+                      <div>
+                        <dt className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-1">
+                          Proprietor
+                        </dt>
+                        <dd className="font-display text-body-l text-ivory-shell">
+                          {SITE.founder}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-1">
+                          Established
+                        </dt>
+                        <dd className="font-display text-body-l text-ivory-shell tabular-nums">
+                          {SITE.established}
+                        </dd>
+                      </div>
+                    </dl>
+                  </AnimateOnScroll>
                 </div>
-              </AnimateOnScroll>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-ink-black border-t border-steel-mesh/10">
-        <div className="max-w-content mx-auto px-6 py-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-display text-body-m font-semibold text-ivory-shell">
+      <footer className="bg-ink-black border-t border-steel-mesh/15 text-ivory-shell">
+        <div className="max-w-content mx-auto px-6 py-14 md:py-16">
+          <div className="grid gap-10 md:grid-cols-12">
+            {/* Identity */}
+            <div className="md:col-span-5">
+              <span className="font-display text-display-m font-bold text-ivory-shell">
                 {SITE.name}
               </span>
-              <span className="text-steel-mesh/40" aria-hidden="true">
+              <p className="font-body text-body-m text-ivory-shell/60 leading-relaxed mt-3 max-w-xs">
+                {SITE.tagline} A family-run Sonali poultry farm in{" "}
+                {SITE.locality}.
+              </p>
+              <div className="flex items-center gap-3 mt-6">
+                <span className="h-px w-8 bg-feed-gold" aria-hidden="true" />
+                <span className="font-mono text-caption text-steel-mesh uppercase tracking-[0.2em]">
+                  Est. {SITE.established} — Naogaon, Bangladesh
+                </span>
+              </div>
+            </div>
+
+            {/* Explore */}
+            <nav aria-label="Footer" className="md:col-span-3">
+              <h3 className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-4">
+                Explore
+              </h3>
+              <ul className="space-y-3">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="font-body text-body-m text-ivory-shell/80 hover:text-feed-gold transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Reach */}
+            <div className="md:col-span-4">
+              <h3 className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-4">
+                Reach
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <a
+                    href={`tel:${SITE.phone}`}
+                    className="font-mono text-body-m text-ivory-shell/80 hover:text-feed-gold transition-colors tabular-nums"
+                  >
+                    {SITE.phoneDisplay}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${SITE.email}`}
+                    className="font-mono text-body-m text-ivory-shell/80 hover:text-feed-gold transition-colors break-all"
+                  >
+                    {SITE.email}
+                  </a>
+                </li>
+                <li className="font-body text-body-m text-ivory-shell/60">
+                  {SITE.locality}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Baseline */}
+          <div className="mt-12 pt-6 border-t border-steel-mesh/15 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+            <p className="font-mono text-caption text-steel-mesh/70">
+              &copy; {new Date().getFullYear()} {SITE.name}. All rights
+              reserved.
+            </p>
+            <div className="flex flex-col items-center gap-1 sm:flex-row sm:gap-3 font-mono text-caption text-steel-mesh/70">
+              <span>
+                Proprietor &middot; {SITE.founder}
+              </span>
+              <span className="hidden sm:inline text-steel-mesh/30" aria-hidden="true">
                 &middot;
               </span>
-              <span className="font-mono text-caption text-steel-mesh">
+              <span>
                 Part of{" "}
                 <a
                   href={SITE.parentUrl}
-                  className="text-ivory-shell/80 hover:text-barind-rust transition-colors underline underline-offset-2 decoration-steel-mesh/30 hover:decoration-barind-rust"
+                  className="text-ivory-shell/80 hover:text-feed-gold transition-colors underline underline-offset-2 decoration-steel-mesh/30 hover:decoration-feed-gold"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -519,10 +659,6 @@ export default function Home() {
                 </a>
               </span>
             </div>
-            <p className="font-mono text-caption text-steel-mesh/60">
-              &copy; {new Date().getFullYear()} {SITE.name}. All rights
-              reserved.
-            </p>
           </div>
         </div>
       </footer>

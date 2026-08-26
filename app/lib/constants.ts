@@ -1,12 +1,22 @@
 export const SITE = {
   name: "ZeroD Farms",
   tagline: "Healthy food for everyone.",
+  founder: "Kazi Bahalul Arfin",
+  established: "2019",
   phone: "+8801341570410",
   phoneDisplay: "+880 1341-570410",
   whatsapp: "https://wa.me/8801341570410",
   email: "zerodfarms@gmail.com",
   address:
     "West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530",
+  // Broken into lines for the location plate in Contact.
+  addressLines: [
+    "West Kazipara, Kundona",
+    "Fotepur Madrasa Road",
+    "Mahadebpur, Naogaon – 6530",
+    "Bangladesh",
+  ],
+  locality: "Mahadebpur, Naogaon",
   parentBrand: "ZeroD",
   parentUrl: "https://zerod.vercel.app",
 } as const;
