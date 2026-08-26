@@ -4,7 +4,7 @@ Marketing site for **ZeroD Farms** — a poultry operation in Mahadebpur, Naogao
 
 Founded on 31 December 2019 by **Kazi Bahalul Arfin**, the farm runs five controlled sheds with a 10,000-bird capacity and produces around 5,000 Pakistani Sonali Classic birds a month on Leader Feed, batch-tracked from placement to harvest. Day-to-day operations and the farm's in-house software are led by CEO **[Afif Zilani](https://afifzilani.com)**.
 
-Part of the [ZeroD](https://zerod.vercel.app) brand.
+Part of the [ZeroD](https://zerod.bd) brand.
 
 ## Stack
 
