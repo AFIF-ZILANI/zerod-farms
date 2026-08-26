@@ -2,6 +2,7 @@ export const SITE = {
   name: "ZeroD Farms",
   tagline: "Healthy food for everyone.",
   phone: "+8801341570410",
+  phoneDisplay: "+880 1341-570410",
   whatsapp: "https://wa.me/8801341570410",
   email: "zerodfarms@gmail.com",
   address:
@@ -56,9 +57,9 @@ export const DATASET_COPY =
   "We're building a live, public poultry dataset through PoultryScale — real weighing and production data from farms across Bangladesh, made open for research and better decision-making. Coming soon.";
 
 export const CONTACT_LINKS = [
-  { label: "Call", href: `tel:${SITE.phone}`, icon: "phone" },
-  { label: "WhatsApp", href: SITE.whatsapp, icon: "whatsapp" },
-  { label: "Email", href: `mailto:${SITE.email}`, icon: "email" },
+  { label: "Call", href: `tel:${SITE.phone}`, icon: "phone", value: SITE.phoneDisplay },
+  { label: "WhatsApp", href: SITE.whatsapp, icon: "whatsapp", value: SITE.phoneDisplay },
+  { label: "Email", href: `mailto:${SITE.email}`, icon: "email", value: SITE.email },
 ] as const;
 
 // Operational figures — surfaced as the farm's credibility at a glance.

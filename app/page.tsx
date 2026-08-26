@@ -445,6 +445,10 @@ export default function Home() {
                   <h2 className="font-display text-display-l font-semibold text-ivory-shell">
                     Contact
                   </h2>
+                  <p className="font-body text-body-m text-ivory-shell/70 max-w-md mx-auto mt-4">
+                    For orders, wholesale enquiries, or to arrange a visit to
+                    the farm — reach us through any of the channels below.
+                  </p>
                 </div>
               </AnimateOnScroll>
 
@@ -453,7 +457,7 @@ export default function Home() {
                   <AnimateOnScroll key={link.label} delay={i * 60}>
                     <a
                       href={link.href}
-                      className="group flex flex-col items-center text-center p-8 rounded-lg border border-steel-mesh/20 hover:border-barind-rust/60 transition-all duration-300 min-h-11 min-w-11"
+                      className="group flex flex-col items-center text-center p-8 rounded-lg border border-steel-mesh/20 hover:border-barind-rust/60 hover:-translate-y-1 transition-all duration-300 min-h-11 min-w-11"
                       {...(link.icon !== "phone"
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
@@ -466,10 +470,8 @@ export default function Home() {
                       <span className="font-display text-body-l font-semibold text-ivory-shell mb-1">
                         {link.label}
                       </span>
-                      <span className="font-mono text-caption text-steel-mesh">
-                        {link.icon === "phone" && SITE.phone}
-                        {link.icon === "whatsapp" && "Chat on WhatsApp"}
-                        {link.icon === "email" && SITE.email}
+                      <span className="font-mono text-caption text-steel-mesh group-hover:text-ivory-shell/70 transition-colors break-all">
+                        {link.value}
                       </span>
                     </a>
                   </AnimateOnScroll>
