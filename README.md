@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZeroD Farms
 
-## Getting Started
+Marketing site for **ZeroD Farms** — a poultry operation in Mahadebpur, Naogaon, Bangladesh. _Healthy food for everyone._
 
-First, run the development server:
+Founded on 31 December 2019 by **Kazi Bahalul Arfin**, the farm runs five controlled sheds with a 10,000-bird capacity and produces around 5,000 Pakistani Sonali Classic birds a month on Leader Feed, batch-tracked from placement to harvest. Day-to-day operations and the farm's in-house software are led by CEO **[Afif Zilani](https://afifzilani.com)**.
+
+Part of the [ZeroD](https://zerod.vercel.app) brand.
+
+## Stack
+
+- [Next.js 16](https://nextjs.org) (App Router, Turbopack)
+- React 19
+- [Tailwind CSS v4](https://tailwindcss.com)
+- TypeScript
+- [Bun](https://bun.sh) as package manager and runtime
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+bun run build   # production build
+bun start       # serve the production build
+bun run lint    # eslint
+```
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+It's a single-page site. Content and copy live in one place so the page reads as layout, not prose.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+  page.tsx          # the page — all sections
+  layout.tsx        # metadata + JSON-LD structured data
+  lib/constants.ts  # all site copy and data (single source of truth)
+  components/        # SectionHeader, Card, Button, AnimateOnScroll, SectionDivider
+  globals.css        # Tailwind theme — design tokens (color, type scale)
+  sitemap.ts
+public/
+  robots.txt
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## SEO & GEO
 
-## Deploy on Vercel
+The site is built to be citable by search engines and AI answer engines:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- A linked JSON-LD `@graph` in `layout.tsx` — `LocalBusiness`, `Person` (founder and CEO), and `WebSite` nodes, cross-referenced by `@id`, with `sameAs` links for entity resolution.
+- A `FAQPage` block whose answers mirror the on-page FAQ, so the same facts are available as machine-readable Q&A.
+- Canonical URL, Open Graph and Twitter cards, `sitemap.ts`, and `robots.txt`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Edit facts in `app/lib/constants.ts`; the structured data and the FAQ both draw from confirmed data only.
+
+## Contact
+
+West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530, Bangladesh
+Phone / WhatsApp: +880 1341-570410 · zerodfarms@gmail.com
