@@ -18,7 +18,7 @@ export const SITE = {
   ],
   locality: "Mahadebpur, Naogaon",
   parentBrand: "ZeroD",
-  parentUrl: "https://zerod.vercel.app",
+  parentUrl: "https://zerod.bd",
 } as const;
 
 export const NAV_LINKS = [
