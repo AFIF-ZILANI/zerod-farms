@@ -3,6 +3,8 @@ export const SITE = {
   tagline: "Healthy food for everyone.",
   founder: "Kazi Bahalul Arfin",
   established: "2019",
+  breed: "Pakistani Sonali Classic",
+  feed: "Leader Feed",
   phone: "+8801341570410",
   phoneDisplay: "+880 1341-570410",
   whatsapp: "https://wa.me/8801341570410",
@@ -33,33 +35,70 @@ export const PRODUCTION_CARDS = [
     title: "Broiler Rearing",
     icon: "shed",
     description:
-      "Raising Sonali birds from day-old chicks to market weight in controlled shed environments.",
+      "We raise Pakistani Sonali Classic birds from day-old chicks to market weight in controlled sheds.",
+    spec: "Day-old → market weight",
   },
   {
     title: "Batch Tracking",
     icon: "chart",
     description:
-      "Every batch tracked from placement to harvest — feed conversion, mortality, weight gain logged daily.",
+      "Every batch is tracked from placement to harvest — feed conversion, mortality, and weight gain logged daily.",
+    spec: "Logged daily, every shed",
   },
   {
     title: "Local Supply",
     icon: "truck",
     description:
-      "Direct supply to local buyers and wholesalers across Naogaon and surrounding districts.",
+      "We supply local buyers and wholesalers direct, across Naogaon and the surrounding districts.",
+    spec: "Naogaon & nearby districts",
   },
 ] as const;
 
-export const FARM_ABOUT =
-  "ZeroD Farms started on 31 December 2019, when Kazi Bahalul Arfin set up the first shed in Naogaon with 2,500 Sonali birds. Six years on, we run five sheds with capacity for 10,000 birds and produce around 5,000 birds a month for local buyers and wholesalers, on Leader Feed. We're building our own tools — a farm dashboard, an employee app for daily shed work, and PoultryScale — to run a farm that's more digital, more efficient, and lighter on the environment. The goal hasn't moved since day one: healthy food, for everyone.";
+// Our Farm — split into a lead + mission so the section can breathe.
+export const FARM_LEAD =
+  "ZeroD Farms started on 31 December 2019, when Kazi Bahalul Arfin raised the first shed in Naogaon with 2,500 Pakistani Sonali Classic birds. Six years on, we run five sheds with capacity for 10,000 birds and produce around 5,000 birds a month for local buyers and wholesalers, on Leader Feed.";
+
+export const FARM_MISSION =
+  "We're building the farm to be more digital, more efficient, and lighter on the land — running it on tools we build ourselves.";
+
+// The farm as a spec sheet — every value here is confirmed, none invented.
+export const FARM_FACTS = [
+  { label: "Founded", value: "31 Dec 2019" },
+  { label: "Founder", value: "Kazi Bahalul Arfin" },
+  { label: "Breed", value: "Pakistani Sonali Classic" },
+  { label: "Feed", value: "Leader Feed" },
+  { label: "Active sheds", value: "5" },
+  { label: "Capacity", value: "10,000 birds" },
+  { label: "Output", value: "~5,000 / month" },
+  { label: "Supply area", value: "Naogaon & nearby" },
+] as const;
+
+// Tools the farm is building in-house (still in progress — present as such).
+export const FARM_TOOLS = [
+  {
+    name: "Farm dashboard",
+    description: "One place for every shed's numbers.",
+  },
+  {
+    name: "Employee app",
+    description: "Daily shed work, logged from the floor.",
+  },
+  {
+    name: "PoultryScale",
+    description: "Open weighing and production data.",
+  },
+] as const;
 
 export const TIMELINE = [
   {
     year: "2019",
-    event: "Founded by Kazi Bahalul Arfin — first shed, 2,500 Sonali birds",
+    event:
+      "Founded by Kazi Bahalul Arfin — first shed, 2,500 Pakistani Sonali Classic birds.",
   },
   {
     year: "2026",
-    event: "5 sheds, 10,000-bird capacity, ~5,000 birds per month",
+    event:
+      "Five sheds, 10,000-bird capacity, ~5,000 birds produced every month.",
   },
 ] as const;
 

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { SectionDivider } from "./components/SectionDivider";
 import { Button } from "./components/Button";
 import { Card } from "./components/Card";
+import { SectionHeader } from "./components/SectionHeader";
 import { Nav } from "./components/Nav";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
 import {
@@ -10,7 +11,10 @@ import {
   NAV_LINKS,
   PRODUCTION_CARDS,
   STATS,
-  FARM_ABOUT,
+  FARM_LEAD,
+  FARM_MISSION,
+  FARM_FACTS,
+  FARM_TOOLS,
   TIMELINE,
   DATASET_COPY,
   CONTACT_LINKS,
@@ -162,15 +166,18 @@ const PRODUCTION_ICONS: Record<string, ReactNode> = {
 const GALLERY_IMAGES = [
   {
     src: "/images/gallery-1.jpg",
-    alt: "Brown Sonali chickens feeding inside a shed at ZeroD Farms",
+    alt: "Brown Pakistani Sonali Classic chickens feeding inside a shed at ZeroD Farms",
+    caption: "Sonali Classic hens at feed",
   },
   {
     src: "/images/gallery-2.jpg",
     alt: "Close-up of healthy poultry birds in natural light",
+    caption: "Under natural light",
   },
   {
     src: "/images/gallery-3.jpg",
     alt: "Colorful rooster on the farm premises",
+    caption: "On the farm premises",
   },
 ] as const;
 
@@ -223,9 +230,10 @@ export default function Home() {
 
               {/* Subhead */}
               <p className="font-body text-body-l text-ivory-shell/80 leading-relaxed max-w-xl mb-8">
-                A family-run Sonali poultry farm in Mahadebpur, Naogaon — five
-                sheds, 10,000-bird capacity, every batch logged from day-old
-                chick to market weight.
+                A family-run poultry farm in Mahadebpur, Naogaon, raising
+                Pakistani Sonali Classic birds — five sheds, 10,000-bird
+                capacity, every batch logged from day-old chick to market
+                weight.
               </p>
 
               {/* CTAs */}
@@ -286,20 +294,29 @@ export default function Home() {
         <section id="production" className="section-padding px-6">
           <div className="max-w-content mx-auto">
             <AnimateOnScroll>
-              <h2 className="font-display text-display-l font-semibold text-ink-black mb-4">
-                Our Production
-              </h2>
-              <p className="font-mono text-caption text-steel-mesh mb-12 uppercase tracking-widest">
-                What we do
+              <SectionHeader
+                eyebrow="What we do"
+                title="Poultry, raised and recorded."
+                className="mb-4"
+              />
+              <p className="font-body text-body-l text-steel-mesh max-w-xl mb-12">
+                One flock, three jobs done well — reared in controlled sheds,
+                measured every day, and delivered straight to local buyers.
               </p>
             </AnimateOnScroll>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               {PRODUCTION_CARDS.map((card, i) => (
-                <AnimateOnScroll key={card.title} delay={i * 60}>
+                <AnimateOnScroll
+                  key={card.title}
+                  delay={i * 60}
+                  className="h-full"
+                >
                   <Card
                     title={card.title}
                     description={card.description}
                     icon={PRODUCTION_ICONS[card.icon]}
+                    spec={card.spec}
+                    className="h-full"
                   />
                 </AnimateOnScroll>
               ))}
@@ -313,29 +330,37 @@ export default function Home() {
         <section id="gallery" className="section-padding px-6">
           <div className="max-w-content mx-auto">
             <AnimateOnScroll>
-              <h2 className="font-display text-display-l font-semibold text-ink-black mb-4">
-                Gallery
-              </h2>
-              <p className="font-mono text-caption text-steel-mesh mb-12 uppercase tracking-widest">
-                From the farm
-              </p>
+              <SectionHeader
+                eyebrow="From the farm"
+                title="Inside the sheds."
+                className="mb-12"
+              />
             </AnimateOnScroll>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {GALLERY_IMAGES.map((img, i) => (
                 <AnimateOnScroll key={img.src} delay={i * 60}>
-                  <div
-                    className="relative overflow-hidden rounded-lg"
-                    style={{ aspectRatio: "4/5" }}
-                  >
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      className="object-cover grayscale contrast-110 hover:grayscale-0 hover:contrast-100 transition-all duration-500"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      loading="lazy"
-                    />
-                  </div>
+                  <figure>
+                    <div
+                      className="relative overflow-hidden rounded-lg"
+                      style={{ aspectRatio: "4/5" }}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover grayscale contrast-110 hover:grayscale-0 hover:contrast-100 transition-all duration-500"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                        loading="lazy"
+                      />
+                    </div>
+                    <figcaption className="mt-3 flex items-center gap-2 font-mono text-caption text-steel-mesh uppercase tracking-widest">
+                      <span
+                        className="h-px w-4 bg-barind-rust"
+                        aria-hidden="true"
+                      />
+                      {img.caption}
+                    </figcaption>
+                  </figure>
                 </AnimateOnScroll>
               ))}
             </div>
@@ -348,18 +373,80 @@ export default function Home() {
         <section id="farm" className="section-padding px-6">
           <div className="max-w-content mx-auto">
             <AnimateOnScroll>
-              <h2 className="font-display text-display-l font-semibold text-ink-black mb-4">
-                Our Farm
-              </h2>
-              <p className="font-mono text-caption text-steel-mesh mb-12 uppercase tracking-widest">
-                About us
-              </p>
+              <SectionHeader
+                eyebrow="About us"
+                title="A family farm, run like a system."
+                className="mb-12"
+              />
             </AnimateOnScroll>
-            <AnimateOnScroll>
-              <p className="font-body text-body-l text-ink-black leading-relaxed max-w-120">
-                {FARM_ABOUT}
-              </p>
-            </AnimateOnScroll>
+
+            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+              {/* Story + what we're building */}
+              <div className="lg:col-span-7">
+                <AnimateOnScroll>
+                  <p className="font-body text-body-l text-ink-black leading-relaxed">
+                    {FARM_LEAD}
+                  </p>
+                  <p className="font-body text-body-m text-steel-mesh leading-relaxed mt-5 max-w-prose">
+                    {FARM_MISSION}
+                  </p>
+                </AnimateOnScroll>
+
+                <AnimateOnScroll delay={80}>
+                  <div className="mt-10">
+                    <p className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-5">
+                      Building in-house
+                    </p>
+                    <ul className="grid gap-6 sm:grid-cols-3">
+                      {FARM_TOOLS.map((tool) => (
+                        <li
+                          key={tool.name}
+                          className="border-t-2 border-barind-rust/40 pt-4"
+                        >
+                          <span className="block font-body font-medium text-body-m text-ink-black">
+                            {tool.name}
+                          </span>
+                          <span className="block font-body text-body-m text-steel-mesh mt-1">
+                            {tool.description}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </AnimateOnScroll>
+              </div>
+
+              {/* Field record — the farm as a spec sheet */}
+              <div className="lg:col-span-5">
+                <AnimateOnScroll delay={120}>
+                  <div className="rounded-lg border border-steel-mesh/25 bg-paper-white p-6 sm:p-8">
+                    <div className="flex gap-1.5 mb-6" aria-hidden="true">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <span key={i} className="w-0.5 h-2.5 bg-barind-rust" />
+                      ))}
+                    </div>
+                    <p className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-4">
+                      Field record
+                    </p>
+                    <dl className="divide-y divide-steel-mesh/15">
+                      {FARM_FACTS.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="flex items-baseline justify-between gap-4 py-3"
+                        >
+                          <dt className="font-mono text-caption text-steel-mesh uppercase tracking-wider">
+                            {fact.label}
+                          </dt>
+                          <dd className="font-mono text-body-m text-ink-black tabular-nums text-right">
+                            {fact.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </AnimateOnScroll>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -369,22 +456,21 @@ export default function Home() {
         <section id="timeline" className="section-padding px-6">
           <div className="max-w-content mx-auto">
             <AnimateOnScroll>
-              <h2 className="font-display text-display-l font-semibold text-ink-black mb-4">
-                Timeline
-              </h2>
-              <p className="font-mono text-caption text-steel-mesh mb-12 uppercase tracking-widest">
-                Our journey
-              </p>
+              <SectionHeader
+                eyebrow="Our journey"
+                title="From one shed to five."
+                className="mb-12"
+              />
             </AnimateOnScroll>
-            <div className="relative border-l-2 border-barind-rust/30 ml-4 space-y-12">
+            <div className="relative border-l-2 border-barind-rust/30 ml-2 space-y-12">
               {TIMELINE.map((item, i) => (
                 <AnimateOnScroll key={item.year} delay={i * 60}>
                   <div className="relative pl-8">
-                    <div className="absolute left-0 top-2 w-3 h-3 bg-barind-rust rounded-full -translate-x-1.75" />
-                    <span className="font-display text-display-m text-barind-rust leading-none">
+                    <div className="absolute left-0 top-1.5 w-3 h-3 bg-barind-rust rounded-full -translate-x-1.75 ring-4 ring-ivory-shell" />
+                    <span className="font-mono text-display-m text-barind-rust tabular-nums leading-none">
                       {item.year}
                     </span>
-                    <p className="font-body text-body-m text-steel-mesh mt-2 max-w-md">
+                    <p className="font-body text-body-l text-ink-black/80 mt-3 max-w-md">
                       {item.event}
                     </p>
                   </div>
@@ -397,12 +483,22 @@ export default function Home() {
         <SectionDivider />
 
         {/* Vision */}
-        <section id="vision" className="section-padding px-6 text-center">
-          <div className="max-w-content mx-auto">
+        <section id="vision" className="section-padding px-6">
+          <div className="max-w-content mx-auto text-center">
             <AnimateOnScroll>
-              <blockquote className="font-display text-display-xl italic text-ink-black">
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <span className="h-px w-8 bg-barind-rust" aria-hidden="true" />
+                <span className="font-mono text-caption text-steel-mesh uppercase tracking-[0.2em]">
+                  Our vision
+                </span>
+                <span className="h-px w-8 bg-barind-rust" aria-hidden="true" />
+              </div>
+              <blockquote className="font-display font-semibold italic text-ink-black leading-[1.1] text-display-l sm:text-display-xl max-w-[16ch] mx-auto text-balance">
                 &ldquo;{SITE.tagline}&rdquo;
               </blockquote>
+              <p className="font-mono text-caption text-steel-mesh uppercase tracking-widest mt-8">
+                The goal since day one — 31 December 2019
+              </p>
             </AnimateOnScroll>
           </div>
         </section>
@@ -575,8 +671,8 @@ export default function Home() {
                 {SITE.name}
               </span>
               <p className="font-body text-body-m text-ivory-shell/60 leading-relaxed mt-3 max-w-xs">
-                {SITE.tagline} A family-run Sonali poultry farm in{" "}
-                {SITE.locality}.
+                {SITE.tagline} A family-run poultry farm in {SITE.locality},
+                raising {SITE.breed} birds.
               </p>
               <div className="flex items-center gap-3 mt-6">
                 <span className="h-px w-8 bg-feed-gold" aria-hidden="true" />

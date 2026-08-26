@@ -62,6 +62,7 @@ export const metadata: Metadata = {
     "Naogaon",
     "Bangladesh",
     "broiler",
+    "Pakistani Sonali Classic",
     "Sonali",
     "ZeroD Farms",
   ],
