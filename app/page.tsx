@@ -18,6 +18,8 @@ import {
   TIMELINE,
   DATASET_COPY,
   CONTACT_LINKS,
+  LEADERSHIP,
+  FAQ_ITEMS,
 } from "./lib/constants";
 
 function PhoneIcon() {
@@ -180,6 +182,21 @@ const GALLERY_IMAGES = [
     caption: "On the farm premises",
   },
 ] as const;
+
+// FAQPage structured data — same source as the on-page FAQ, mirrored so AI
+// engines get clean, citable Q&A text.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.a,
+    },
+  })),
+};
 
 export default function Home() {
   return (
@@ -447,6 +464,58 @@ export default function Home() {
                 </AnimateOnScroll>
               </div>
             </div>
+
+            {/* Leadership — who owns and runs the farm */}
+            <AnimateOnScroll delay={160}>
+              <div className="mt-14 pt-10 border-t border-steel-mesh/15">
+                <p className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-6">
+                  Leadership
+                </p>
+                <dl className="grid gap-8 sm:grid-cols-2 max-w-3xl">
+                  {LEADERSHIP.map((person) => (
+                    <div
+                      key={person.name}
+                      className="border-t-2 border-barind-rust/40 pt-4"
+                    >
+                      <dt className="font-mono text-caption text-steel-mesh uppercase tracking-wider mb-1">
+                        {person.role}
+                      </dt>
+                      <dd className="font-display text-display-m font-semibold text-ink-black">
+                        {"href" in person ? (
+                          <a
+                            href={person.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 underline underline-offset-4 decoration-barind-rust/40 hover:text-barind-rust hover:decoration-barind-rust transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-barind-rust rounded-sm"
+                          >
+                            {person.name}
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                              className="shrink-0"
+                            >
+                              <path d="M7 17 17 7M7 7h10v10" />
+                            </svg>
+                          </a>
+                        ) : (
+                          person.name
+                        )}
+                      </dd>
+                      <p className="font-body text-body-m text-steel-mesh mt-2">
+                        {person.note}
+                      </p>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </AnimateOnScroll>
           </div>
         </section>
 
@@ -525,6 +594,60 @@ export default function Home() {
                 Coming soon
               </span>
             </AnimateOnScroll>
+          </div>
+        </section>
+
+        <SectionDivider />
+
+        {/* FAQ */}
+        <section id="faq" className="section-padding px-6">
+          <div className="max-w-content mx-auto">
+            <AnimateOnScroll>
+              <SectionHeader
+                eyebrow="Questions"
+                title="Good to know."
+                className="mb-12"
+              />
+            </AnimateOnScroll>
+            <div className="max-w-3xl">
+              {FAQ_ITEMS.map((item, i) => (
+                <AnimateOnScroll key={item.q} delay={i * 50}>
+                  <details
+                    className="group border-b border-steel-mesh/20"
+                    {...(i === 0 ? { open: true } : {})}
+                  >
+                    <summary className="flex items-center justify-between gap-6 py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-barind-rust rounded-sm">
+                      <span className="font-display text-display-m font-semibold text-ink-black">
+                        {item.q}
+                      </span>
+                      <span
+                        className="shrink-0 text-barind-rust transition-transform duration-300 group-open:rotate-45"
+                        aria-hidden="true"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        >
+                          <path d="M12 5v14M5 12h14" />
+                        </svg>
+                      </span>
+                    </summary>
+                    <p className="font-body text-body-m text-steel-mesh leading-relaxed pb-6 max-w-prose">
+                      {item.a}
+                    </p>
+                  </details>
+                </AnimateOnScroll>
+              ))}
+            </div>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
           </div>
         </section>
 

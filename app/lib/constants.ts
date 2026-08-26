@@ -118,3 +118,44 @@ export const STATS = [
   { value: "10,000", label: "Bird capacity" },
   { value: "~5,000", label: "Birds / month" },
 ] as const;
+
+// Who runs the farm — the owner and the CEO. Afif's name links to his site,
+// which strengthens entity resolution for search and AI engines.
+export const LEADERSHIP = [
+  {
+    role: "Founder & owner",
+    name: "Kazi Bahalul Arfin",
+    note: "Raised the first shed in 2019 and owns the farm.",
+  },
+  {
+    role: "CEO & head of management",
+    name: "Afif Zilani",
+    href: "https://afifzilani.com",
+    note: "Full-stack developer leading operations and the farm's in-house software.",
+  },
+] as const;
+
+// FAQs — every answer is drawn from confirmed facts above. Rendered on the
+// page and mirrored into FAQPage structured data for AI citability.
+export const FAQ_ITEMS = [
+  {
+    q: "What does ZeroD Farms produce?",
+    a: "ZeroD Farms raises Pakistani Sonali Classic broiler birds, reared from day-old chicks to market weight in five controlled sheds in Mahadebpur, Naogaon. The farm runs on Leader Feed and produces around 5,000 birds a month.",
+  },
+  {
+    q: "Where is ZeroD Farms located?",
+    a: "The farm is at West Kazipara, Kundona, on Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530, Bangladesh. Call ahead on +880 1341-570410 and we'll meet you at the gate.",
+  },
+  {
+    q: "How do I order or buy birds?",
+    a: "Call or WhatsApp +880 1341-570410, or email zerodfarms@gmail.com. ZeroD Farms supplies local buyers and wholesalers directly across Naogaon and the surrounding districts.",
+  },
+  {
+    q: "Who runs ZeroD Farms?",
+    a: "ZeroD Farms was founded and is owned by Kazi Bahalul Arfin, who raised the first shed in 2019. Afif Zilani is the CEO and head of management, leading day-to-day operations and the farm's in-house software.",
+  },
+  {
+    q: "How does ZeroD Farms track its birds?",
+    a: "Every batch is tracked from placement to harvest, with feed conversion, mortality, and weight gain logged daily in every shed. The farm builds its own tools for this and is opening a public poultry dataset through PoultryScale.",
+  },
+] as const;
