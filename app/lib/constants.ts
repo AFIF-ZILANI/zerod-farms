@@ -1,3 +1,6 @@
+// Canonical origin used for metadata, sitemap and structured data.
+export const SITE_URL = "https://zerodfarms.vercel.app";
+
 export const SITE = {
   name: "ZeroD Farms",
   tagline: "Healthy food for everyone.",
@@ -148,7 +151,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "How do I order or buy birds?",
-    a: "Call or WhatsApp +880 1341-570410, or email zerodfarms@gmail.com. ZeroD Farms supplies local buyers and wholesalers directly across Naogaon and the surrounding districts.",
+    a: "ZeroD Farms sells live birds wholesale — to poultry traders, wholesalers and bulk buyers across Naogaon and the surrounding districts. Check current and upcoming batches in the Production section, then call or WhatsApp +880 1341-570410 or email zerodfarms@gmail.com. There are no online orders; every sale is agreed directly with the farm.",
   },
   {
     q: "Who runs ZeroD Farms?",

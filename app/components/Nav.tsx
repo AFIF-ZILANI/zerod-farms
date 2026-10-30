@@ -14,8 +14,9 @@ export function Nav() {
   useEffect(() => {
     const hero = document.getElementById("hero");
     if (!hero) {
-      setScrolled(true); // no hero on this route → always solid
-      return;
+      // No hero on this route → always solid (deferred to keep the effect pure).
+      const frame = requestAnimationFrame(() => setScrolled(true));
+      return () => cancelAnimationFrame(frame);
     }
     const io = new IntersectionObserver(
       ([entry]) => setScrolled(!entry.isIntersecting),

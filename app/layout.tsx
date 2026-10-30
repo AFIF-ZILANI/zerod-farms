@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "./lib/constants";
 
 const zillaSlab = Zilla_Slab({
   variable: "--font-zilla-slab",
@@ -22,8 +23,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400"],
   display: "swap",
 });
-
-const SITE_URL = "https://zerodfarms.vercel.app";
 
 // Linked @graph so search and AI engines resolve the farm, its founder, and
 // its CEO as distinct, connected entities. Every value is confirmed — no

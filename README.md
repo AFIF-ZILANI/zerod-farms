@@ -13,11 +13,13 @@ Part of the [ZeroD](https://zerod.bd) brand.
 - [Tailwind CSS v4](https://tailwindcss.com)
 - TypeScript
 - [Bun](https://bun.sh) as package manager and runtime
+- [Supabase](https://supabase.com) — Postgres, Auth and Storage for production batches
 
 ## Getting started
 
 ```bash
 bun install
+cp .env.example .env.local   # Supabase URL + publishable key (optional for the static sections)
 bun dev
 ```
 
@@ -33,19 +35,32 @@ bun run lint    # eslint
 
 ## Structure
 
-It's a single-page site. Content and copy live in one place so the page reads as layout, not prose.
+It's a single-page site. Static copy lives in one place so the page reads as layout, not prose. Production batches are the one live part: they come from Supabase and are managed in a protected admin panel.
 
 ```
 app/
-  page.tsx          # the page — all sections
-  layout.tsx        # metadata + JSON-LD structured data
-  lib/constants.ts  # all site copy and data (single source of truth)
-  components/        # SectionHeader, Card, Button, AnimateOnScroll, SectionDivider
-  globals.css        # Tailwind theme — design tokens (color, type scale)
+  page.tsx               # the page — all sections
+  layout.tsx             # metadata + JSON-LD structured data
+  lib/constants.ts       # all static site copy and data (single source of truth)
+  lib/production/        # batch types, public queries, date/WhatsApp formatting
+  lib/supabase/          # Supabase clients (public, server/cookies, browser) + admin check
+  components/            # SectionHeader, Card, Button, AnimateOnScroll, SectionDivider
+  components/production/ # Production & Wholesale Availability section, batch cards, media player
+  admin/                 # /admin/login and /admin/production (batches, media, publishing)
+  media/[id]/route.ts    # published-only media → short-lived signed URL
+  globals.css            # Tailwind theme — design tokens (color, type scale)
   sitemap.ts
+proxy.ts                 # refreshes the admin session, gates /admin
+supabase/migrations/     # schema, RLS, storage bucket + policies
 public/
   robots.txt
 ```
+
+## Production & wholesale availability
+
+The homepage `#production` section shows batches **available for sale** and **upcoming wholesale sales**, with real farm videos and WhatsApp/phone enquiry buttons. It's a B2B enquiry tool — no prices, cart, checkout or customer accounts.
+
+Setup (Supabase project, migration, first admin account, env vars, deployment) and day-to-day use are in **[docs/production-admin.md](docs/production-admin.md)**.
 
 ## SEO & GEO
 

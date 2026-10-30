@@ -6,6 +6,7 @@ import { Card } from "./components/Card";
 import { SectionHeader } from "./components/SectionHeader";
 import { Nav } from "./components/Nav";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
+import { ProductionSection } from "./components/production/ProductionSection";
 import {
   SITE,
   NAV_LINKS,
@@ -21,6 +22,10 @@ import {
   LEADERSHIP,
   FAQ_ITEMS,
 } from "./lib/constants";
+
+// Production availability comes from Supabase. Rebuild at most every five
+// minutes; admin changes also revalidate this page on demand.
+export const revalidate = 300;
 
 function PhoneIcon() {
   return (
@@ -259,7 +264,7 @@ export default function Home() {
                   Call the farm
                 </Button>
                 <a
-                  href="#production"
+                  href="#what-we-do"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-3 min-h-11 rounded-lg border border-ivory-shell/30 text-ivory-shell font-body text-body-m hover:bg-ivory-shell hover:text-ink-black hover:border-ivory-shell transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ivory-shell"
                 >
                   See how we work
@@ -307,8 +312,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Production */}
-        <section id="production" className="section-padding px-6">
+        {/* What we do */}
+        <section id="what-we-do" className="section-padding px-6">
           <div className="max-w-content mx-auto">
             <AnimateOnScroll>
               <SectionHeader
@@ -340,6 +345,11 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <SectionDivider />
+
+        {/* Production & wholesale availability (live from Supabase) */}
+        <ProductionSection />
 
         <SectionDivider />
 
