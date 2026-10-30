@@ -1,3 +1,7 @@
+// Canonical origin used for metadata, sitemap, structured data and shared
+// batch links. Override per environment with NEXT_PUBLIC_SITE_URL.
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://farms.zerod.bd").replace(/\/+$/, "");
+
 export const SITE = {
   name: "ZeroD Farms",
   tagline: "Healthy food for everyone.",
@@ -5,9 +9,13 @@ export const SITE = {
   established: "2019",
   breed: "Pakistani Sonali Classic",
   feed: "Leader Feed",
-  phone: "+8801341570410",
-  phoneDisplay: "+880 1341-570410",
-  whatsapp: "https://wa.me/8801341570410",
+  phone: "+8801354711846",
+  phoneDisplay: "+880 1354-711846",
+  whatsapp: "https://wa.me/8801354711846",
+  // The same number is on Imo. Imo has no public click-to-chat link (unlike
+  // wa.me), so the ID is shown with a copy button — buyers paste it into Imo.
+  messagingApps: "WhatsApp & Imo",
+  imoId: "imoid_wiN6TNNstQ",
   email: "zerodfarms@gmail.com",
   address:
     "West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530",
@@ -24,10 +32,10 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Production", href: "#production" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Our Farm", href: "#farm" },
-  { label: "Contact", href: "#contact" },
+  { label: "Production", href: "/#production" },
+  { label: "Gallery", href: "/#gallery" },
+  { label: "Our Farm", href: "/#farm" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 export const PRODUCTION_CARDS = [
@@ -107,7 +115,7 @@ export const DATASET_COPY =
 
 export const CONTACT_LINKS = [
   { label: "Call", href: `tel:${SITE.phone}`, icon: "phone", value: SITE.phoneDisplay },
-  { label: "WhatsApp", href: SITE.whatsapp, icon: "whatsapp", value: SITE.phoneDisplay },
+  { label: "WhatsApp · also on Imo", href: SITE.whatsapp, icon: "whatsapp", value: SITE.phoneDisplay },
   { label: "Email", href: `mailto:${SITE.email}`, icon: "email", value: SITE.email },
 ] as const;
 
@@ -144,11 +152,11 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Where is ZeroD Farms located?",
-    a: "The farm is at West Kazipara, Kundona, on Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530, Bangladesh. Call ahead on +880 1341-570410 and we'll meet you at the gate.",
+    a: "The farm is at West Kazipara, Kundona, on Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530, Bangladesh. Call ahead on +880 1354-711846 and we'll meet you at the gate.",
   },
   {
     q: "How do I order or buy birds?",
-    a: "Call or WhatsApp +880 1341-570410, or email zerodfarms@gmail.com. ZeroD Farms supplies local buyers and wholesalers directly across Naogaon and the surrounding districts.",
+    a: "ZeroD Farms sells live birds wholesale — to poultry traders, wholesalers and bulk buyers across Naogaon and the surrounding districts. Check current and upcoming batches in the Production section, then call or WhatsApp +880 1354-711846, message us on Imo (ID imoid_wiN6TNNstQ, same number), or email zerodfarms@gmail.com. There are no online orders; every sale is agreed directly with the farm.",
   },
   {
     q: "Who runs ZeroD Farms?",

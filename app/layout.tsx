@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE, SITE_URL } from "./lib/constants";
 
 const zillaSlab = Zilla_Slab({
   variable: "--font-zilla-slab",
@@ -23,8 +24,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const SITE_URL = "https://zerodfarms.vercel.app";
-
 // Linked @graph so search and AI engines resolve the farm, its founder, and
 // its CEO as distinct, connected entities. Every value is confirmed — no
 // invented coordinates, employee counts, prices, or social profiles.
@@ -38,7 +37,7 @@ const jsonLd = {
       description:
         "Poultry farm in Mahadebpur, Naogaon, Bangladesh — production with 5 sheds and 10,000-bird capacity.",
       url: SITE_URL,
-      telephone: "+8801341570410",
+      telephone: SITE.phone,
       email: "zerodfarms@gmail.com",
       image: `${SITE_URL}/images/hero.webp`,
       logo: `${SITE_URL}/zerod-farms-logo.svg`,
@@ -120,7 +119,7 @@ const jsonLd = {
 export const metadata: Metadata = {
   title: "ZeroD Farms — Poultry Farm in Naogaon, Bangladesh",
   description:
-    "ZeroD Farms is a poultry operation in Mahadebpur, Naogaon — 5 sheds, 10,000-bird capacity, ~5,000 birds produced monthly. Call, WhatsApp, or visit.",
+    "ZeroD Farms is a poultry operation in Mahadebpur, Naogaon — 5 sheds, 10,000-bird capacity, ~5,000 birds produced monthly. Call, WhatsApp, Imo, or visit.",
   keywords: [
     "poultry farm",
     "Naogaon",
@@ -142,7 +141,7 @@ export const metadata: Metadata = {
     title: "ZeroD Farms — Poultry Farm in Naogaon, Bangladesh",
     description:
       "ZeroD Farms is a poultry operation in Mahadebpur, Naogaon — 5 sheds, 10,000-bird capacity.",
-    url: "https://zerodfarms.vercel.app",
+    url: SITE_URL,
     locale: "en_US",
     siteName: "ZeroD Farms",
     images: [
@@ -159,7 +158,7 @@ export const metadata: Metadata = {
       "ZeroD Farms is a poultry operation in Mahadebpur, Naogaon — 5 sheds, 10,000-bird capacity.",
     images: ["/images/hero.webp"],
   },
-  metadataBase: new URL("https://zerodfarms.vercel.app"),
+  metadataBase: new URL(SITE_URL),
 };
 
 export default function RootLayout({

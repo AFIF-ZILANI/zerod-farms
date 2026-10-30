@@ -5,10 +5,12 @@ import { Button } from "./components/Button";
 import { Card } from "./components/Card";
 import { SectionHeader } from "./components/SectionHeader";
 import { Nav } from "./components/Nav";
+import { Footer } from "./components/Footer";
+import { CopyText } from "./components/CopyText";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
+import { ProductionSection } from "./components/production/ProductionSection";
 import {
   SITE,
-  NAV_LINKS,
   PRODUCTION_CARDS,
   STATS,
   FARM_LEAD,
@@ -21,6 +23,11 @@ import {
   LEADERSHIP,
   FAQ_ITEMS,
 } from "./lib/constants";
+
+// Production availability comes from Supabase. Admin changes revalidate this
+// page on demand; the 60s interval also bounds the rare case where a
+// regeneration already in flight caches data read just before a change.
+export const revalidate = 60;
 
 function PhoneIcon() {
   return (
@@ -259,7 +266,7 @@ export default function Home() {
                   Call the farm
                 </Button>
                 <a
-                  href="#production"
+                  href="#what-we-do"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-3 min-h-11 rounded-lg border border-ivory-shell/30 text-ivory-shell font-body text-body-m hover:bg-ivory-shell hover:text-ink-black hover:border-ivory-shell transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ivory-shell"
                 >
                   See how we work
@@ -307,8 +314,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Production */}
-        <section id="production" className="section-padding px-6">
+        {/* What we do */}
+        <section id="what-we-do" className="section-padding px-6">
           <div className="max-w-content mx-auto">
             <AnimateOnScroll>
               <SectionHeader
@@ -340,6 +347,11 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <SectionDivider />
+
+        {/* Production & wholesale availability (live from Supabase) */}
+        <ProductionSection />
 
         <SectionDivider />
 
@@ -724,6 +736,34 @@ export default function Home() {
                       </AnimateOnScroll>
                     ))}
                   </div>
+                  {/* Imo has no click-to-chat link, so the ID is copyable instead. */}
+                  <AnimateOnScroll delay={CONTACT_LINKS.length * 60}>
+                    <div className="flex items-center gap-4 sm:gap-6 border-b border-steel-mesh/20 py-5 sm:py-6 -mx-3 px-3">
+                      <span className="text-barind-rust" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                        </svg>
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-mono text-caption uppercase tracking-widest text-steel-mesh mb-1">
+                          Imo · same number
+                        </span>
+                        <span className="block font-mono text-body-l text-ivory-shell truncate">
+                          {SITE.imoId}
+                        </span>
+                      </span>
+                      <CopyText
+                        value={SITE.imoId}
+                        label="Copy Imo ID"
+                        className="shrink-0 border-steel-mesh/40 text-ivory-shell/80 hover:border-feed-gold hover:text-feed-gold"
+                      />
+                    </div>
+                  </AnimateOnScroll>
+                  <p className="mt-4 font-mono text-caption text-steel-mesh">
+                    <span className="text-feed-gold" aria-hidden="true">/ </span>
+                    {SITE.phoneDisplay} is on {SITE.messagingApps}. In Imo, paste the
+                    ID into search to find us.
+                  </p>
                 </div>
 
                 {/* Location plate */}
@@ -784,103 +824,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-ink-black border-t border-steel-mesh/15 text-ivory-shell">
-        <div className="max-w-content mx-auto px-6 py-14 md:py-16">
-          <div className="grid gap-10 md:grid-cols-12">
-            {/* Identity */}
-            <div className="md:col-span-5">
-              <span className="font-display text-display-m font-bold text-ivory-shell">
-                {SITE.name}
-              </span>
-              <p className="font-body text-body-m text-ivory-shell/60 leading-relaxed mt-3 max-w-xs">
-                {SITE.tagline} A family-run poultry farm in {SITE.locality},
-                raising {SITE.breed} birds.
-              </p>
-              <div className="flex items-center gap-3 mt-6">
-                <span className="h-px w-8 bg-feed-gold" aria-hidden="true" />
-                <span className="font-mono text-caption text-steel-mesh uppercase tracking-[0.2em]">
-                  Est. {SITE.established} — Naogaon, Bangladesh
-                </span>
-              </div>
-            </div>
-
-            {/* Explore */}
-            <nav aria-label="Footer" className="md:col-span-3">
-              <h3 className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-4">
-                Explore
-              </h3>
-              <ul className="space-y-3">
-                {NAV_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      className="font-body text-body-m text-ivory-shell/80 hover:text-feed-gold transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            {/* Reach */}
-            <div className="md:col-span-4">
-              <h3 className="font-mono text-caption text-steel-mesh uppercase tracking-widest mb-4">
-                Reach
-              </h3>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href={`tel:${SITE.phone}`}
-                    className="font-mono text-body-m text-ivory-shell/80 hover:text-feed-gold transition-colors tabular-nums"
-                  >
-                    {SITE.phoneDisplay}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${SITE.email}`}
-                    className="font-mono text-body-m text-ivory-shell/80 hover:text-feed-gold transition-colors break-all"
-                  >
-                    {SITE.email}
-                  </a>
-                </li>
-                <li className="font-body text-body-m text-ivory-shell/60">
-                  {SITE.locality}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Baseline */}
-          <div className="mt-12 pt-6 border-t border-steel-mesh/15 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
-            <p className="font-mono text-caption text-steel-mesh/70">
-              &copy; {new Date().getFullYear()} {SITE.name}. All rights
-              reserved.
-            </p>
-            <div className="flex flex-col items-center gap-1 sm:flex-row sm:gap-3 font-mono text-caption text-steel-mesh/70">
-              <span>
-                Proprietor &middot; {SITE.founder}
-              </span>
-              <span className="hidden sm:inline text-steel-mesh/30" aria-hidden="true">
-                &middot;
-              </span>
-              <span>
-                Part of{" "}
-                <a
-                  href={SITE.parentUrl}
-                  className="text-ivory-shell/80 hover:text-feed-gold transition-colors underline underline-offset-2 decoration-steel-mesh/30 hover:decoration-feed-gold"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {SITE.parentBrand}
-                </a>
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

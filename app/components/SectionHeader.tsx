@@ -1,6 +1,7 @@
 interface SectionHeaderProps {
   eyebrow: string;
   title: string;
+  titleId?: string;
   className?: string;
 }
 
@@ -9,6 +10,7 @@ interface SectionHeaderProps {
 export function SectionHeader({
   eyebrow,
   title,
+  titleId,
   className = "",
 }: SectionHeaderProps) {
   return (
@@ -19,7 +21,7 @@ export function SectionHeader({
           {eyebrow}
         </span>
       </div>
-      <h2 className="font-display text-display-l font-semibold text-ink-black leading-[1.1] max-w-[20ch]">
+      <h2 id={titleId} className="font-display text-display-l font-semibold text-ink-black leading-[1.1] max-w-[20ch]">
         {title}
       </h2>
     </div>

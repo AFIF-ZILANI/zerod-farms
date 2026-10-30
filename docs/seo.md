@@ -20,8 +20,8 @@ Any deviation across the website, Google Business Profile, Facebook, or elsewher
 
 ```
 Name:     ZeroD Farms
-Phone:    +8801341570410
-WhatsApp: https://wa.me/8801341570410
+Phone:    +8801354711846
+WhatsApp: https://wa.me/8801354711846
 Email:    zerodfarms@gmail.com
 Address:  West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530
 ```
@@ -42,7 +42,7 @@ Add to the page `<head>` (or via Next.js `generateMetadata` / a `<script type="a
   "name": "ZeroD Farms",
   "description": "Poultry farm in Mahadebpur, Naogaon, Bangladesh — [broiler/layer, pending confirmation] production with 5 sheds and 10,000-bird capacity.",
   "url": "https://zerodfarms.vercel.app",
-  "telephone": "+8801341570410",
+  "telephone": "+8801354711846",
   "email": "zerodfarms@gmail.com",
   "address": {
     "@type": "PostalAddress",
@@ -138,8 +138,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 - Use `<nav>` for the sticky top bar (§4.1).
 - Contact links get real semantic markup, not just styled divs:
   ```html
-  <a href="tel:+8801341570410">Call</a>
-  <a href="https://wa.me/8801341570410">WhatsApp</a>
+  <a href="tel:+8801354711846">Call</a>
+  <a href="https://wa.me/8801354711846">WhatsApp</a>
   <a href="mailto:zerodfarms@gmail.com">Email</a>
   ```
 - All placeholder Steel Mesh image blocks (§5.7 of the Design System) still need real `alt` text describing what the eventual photo will show — e.g. `alt="Broiler shed interior, ZeroD Farms"` — not `alt="placeholder"`. Screen readers and image search both depend on this, and it costs nothing to write correctly now instead of retrofitting later.
