@@ -6,6 +6,7 @@ import { Card } from "./components/Card";
 import { SectionHeader } from "./components/SectionHeader";
 import { Nav } from "./components/Nav";
 import { Footer } from "./components/Footer";
+import { CopyText } from "./components/CopyText";
 import { AnimateOnScroll } from "./components/AnimateOnScroll";
 import { ProductionSection } from "./components/production/ProductionSection";
 import {
@@ -735,6 +736,34 @@ export default function Home() {
                       </AnimateOnScroll>
                     ))}
                   </div>
+                  {/* Imo has no click-to-chat link, so the ID is copyable instead. */}
+                  <AnimateOnScroll delay={CONTACT_LINKS.length * 60}>
+                    <div className="flex items-center gap-4 sm:gap-6 border-b border-steel-mesh/20 py-5 sm:py-6 -mx-3 px-3">
+                      <span className="text-barind-rust" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                        </svg>
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-mono text-caption uppercase tracking-widest text-steel-mesh mb-1">
+                          Imo · same number
+                        </span>
+                        <span className="block font-mono text-body-l text-ivory-shell truncate">
+                          {SITE.imoId}
+                        </span>
+                      </span>
+                      <CopyText
+                        value={SITE.imoId}
+                        label="Copy Imo ID"
+                        className="shrink-0 border-steel-mesh/40 text-ivory-shell/80 hover:border-feed-gold hover:text-feed-gold"
+                      />
+                    </div>
+                  </AnimateOnScroll>
+                  <p className="mt-4 font-mono text-caption text-steel-mesh">
+                    <span className="text-feed-gold" aria-hidden="true">/ </span>
+                    {SITE.phoneDisplay} is on {SITE.messagingApps}. In Imo, paste the
+                    ID into search to find us.
+                  </p>
                 </div>
 
                 {/* Location plate */}

@@ -114,7 +114,7 @@ export function BatchDetail({ batch, banner }: BatchDetailProps) {
                   </div>
                 </div>
                 <p className="mt-5 pt-4 border-t border-steel-mesh/15 font-mono text-caption text-steel-mesh leading-relaxed">
-                  Wholesale only. Prices and terms are agreed directly with the farm — call or WhatsApp{" "}
+                  Wholesale only. Prices and terms are agreed directly with the farm — call, WhatsApp or Imo{" "}
                   <a href={`tel:${SITE.phone}`} className="text-ink-black underline underline-offset-2 decoration-barind-rust/40 tabular-nums">
                     {SITE.phoneDisplay}
                   </a>

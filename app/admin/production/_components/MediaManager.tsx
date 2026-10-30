@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition, type FormEvent, type Ref } from "react";
 import type { MediaRow } from "../../../lib/production/types";
 import { formatDate } from "../../../lib/production/format";
+import { VIDEO_RETENTION_DAYS_AFTER_WINDOW } from "../../../lib/production/retention";
 import { classifyExternalVideo } from "../../../lib/production/video";
 import {
   addMedia,
@@ -79,7 +80,8 @@ export function MediaManager({ batchId, media }: { batchId: string; media: Admin
         <p className="font-body text-body-m text-steel-mesh mt-1 max-w-2xl">
             Real footage of this batch sells it. Add, replace or reorder videos at any time — on a
           published batch, changes go live on the website and its shared link straight away. A poster
-          is made automatically from each uploaded video; replace it with a better frame if you like.
+          is made automatically from each uploaded video; replace it with a better frame if you like. Uploaded videos are stored only until {VIDEO_RETENTION_DAYS_AFTER_WINDOW} days after the sale window ends,
+          then deleted automatically (photos and external links are kept).
         </p>
       </div>
 

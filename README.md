@@ -49,6 +49,7 @@ app/
   admin/                 # /admin/login and /admin/production (batches, media, publishing)
   production/[code]/     # permanent, shareable batch pages
   media/[id]/route.ts    # published-only media → short-lived signed URL
+  api/cron/              # nightly deletion of videos past retention
   globals.css            # Tailwind theme — design tokens (color, type scale)
   sitemap.ts
 proxy.ts                 # refreshes the admin session, gates /admin
@@ -60,6 +61,8 @@ public/
 ## Production & wholesale availability
 
 The homepage `#production` section shows batches **available for sale** and **upcoming wholesale sales**, with real farm videos and WhatsApp/phone enquiry buttons. Each published batch also has a shareable page at `/production/<CODE>` with all its videos and a **Share Batch** menu (native share, WhatsApp, copy link). It's a B2B enquiry tool — no prices, cart, checkout or customer accounts.
+
+Uploaded videos are kept only until 2 days after a batch's sale window ends, then deleted by a nightly job (`vercel.json`).
 
 Setup (Supabase project, migration, first admin account, env vars, deployment) and day-to-day use are in **[docs/production-admin.md](docs/production-admin.md)**.
 
@@ -76,4 +79,4 @@ Edit facts in `app/lib/constants.ts`; the structured data and the FAQ both draw 
 ## Contact
 
 West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530, Bangladesh
-Phone / WhatsApp: +880 1341-570410 · zerodfarms@gmail.com
+Phone / WhatsApp / Imo: +880 1354-711846 (Imo ID `imoid_wiN6TNNstQ`) · zerodfarms@gmail.com

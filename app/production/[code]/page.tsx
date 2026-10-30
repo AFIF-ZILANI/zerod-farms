@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps<"/production/[code]
     `${availabilityLabel(batch.status)}: ${batch.breed} live birds, batch ${batch.batchCode}, from ${SITE.name}, ${SITE.locality}.`,
     weight ? `Average live weight ${weight}.` : null,
     batch.videos.length > 0 ? `Watch ${batch.videos.length} real farm video${batch.videos.length > 1 ? "s" : ""}.` : null,
-    "Wholesale enquiries by WhatsApp or phone.",
+    "Wholesale enquiries by phone, WhatsApp or Imo.",
   ]
     .filter(Boolean)
     .join(" ");

@@ -55,6 +55,12 @@ export function Footer() {
                 >
                   {SITE.phoneDisplay}
                 </a>
+                <span className="block font-mono text-caption text-steel-mesh mt-1">
+                  Call · {SITE.messagingApps}
+                </span>
+                <span className="block font-mono text-caption text-steel-mesh mt-1">
+                  Imo ID · <span className="text-ivory-shell/80 select-all">{SITE.imoId}</span>
+                </span>
               </li>
               <li>
                 <a

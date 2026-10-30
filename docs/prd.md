@@ -87,8 +87,8 @@ Visually distinct band — Paper White background, hairline borders, Feed Gold a
 
 Inverted band, Ink Black background, Ivory Shell text. Tabler icons, stacked on mobile.
 
-- **Phone:** `tel:+8801341570410`
-- **WhatsApp:** `https://wa.me/8801341570410`
+- **Phone:** `tel:+8801354711846`
+- **WhatsApp:** `https://wa.me/8801354711846`
 - **Email:** `mailto:zerodfarms@gmail.com`
 - **Address:** West Kazipara, Kundona, Fotepur Madrasa Road, Mahadebpur, Naogaon – 6530
 

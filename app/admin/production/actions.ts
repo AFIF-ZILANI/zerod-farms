@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { checkAdmin } from "../../lib/supabase/admin-auth";
 import { MEDIA_BUCKET } from "../../lib/supabase/env";
 import { isWindowExpired } from "../../lib/production/format";
+import { purgeExpiredVideos } from "../../lib/production/purge";
 import { BATCH_STATUSES, type BatchStatus, type MediaType } from "../../lib/production/types";
 import { describeDbError, parseBatchForm, type ActionState } from "./validation";
 
@@ -420,4 +421,22 @@ export async function deleteMedia(mediaId: string): Promise<ActionState> {
 
   refresh(media.batch_id);
   return { ok: true, message: "Removed." };
+}
+
+// Same clean-up the daily job runs, triggered by an admin (e.g. before the
+// job has been configured, or to free space straight away).
+export async function purgeExpiredVideosNow(): Promise<ActionState> {
+  const supabase = await adminClient();
+  if (!supabase) return NOT_AUTHORISED;
+
+  const result = await purgeExpiredVideos(supabase);
+  refresh();
+  if (result.errors.length) return { error: result.errors.join(" ") };
+  return {
+    ok: true,
+    message:
+      result.videosRemoved === 0
+        ? "No videos were past their retention period."
+        : `Removed ${result.videosRemoved} video${result.videosRemoved === 1 ? "" : "s"} from ${result.batches} batch${result.batches === 1 ? "" : "es"}.`,
+  };
 }

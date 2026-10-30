@@ -6,6 +6,8 @@ import { AdminShell } from "./_components/AdminShell";
 import { StatusBadges, batchFlags } from "./_components/StatusBadge";
 import { Notice } from "./_components/Notice";
 import { panelClass, primaryButtonClass } from "./_components/ui";
+import { PurgeButton } from "./_components/PurgeButton";
+import { VIDEO_RETENTION_DAYS_AFTER_WINDOW, isPastRetention, videosKeptUntil } from "../../lib/production/retention";
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -52,6 +54,15 @@ export default async function ProductionDashboard({ searchParams }: PageProps<"/
     .order("updated_at", { ascending: false });
 
   const batches = (data ?? []) as BatchRow[];
+
+  // Uploaded (stored) videos per batch, for the retention notices.
+  const { data: storedVideos } = await supabase
+    .from("production_media")
+    .select("batch_id")
+    .eq("media_type", "video")
+    .not("storage_path", "is", null);
+  const videoCount = new Map<string, number>();
+  for (const v of storedVideos ?? []) videoCount.set(v.batch_id, (videoCount.get(v.batch_id) ?? 0) + 1);
   const today = todayInDhaka();
 
   const count = (pred: (b: BatchRow) => boolean) => batches.filter(pred).length;
@@ -79,6 +90,21 @@ export default async function ProductionDashboard({ searchParams }: PageProps<"/
       </div>
 
       {params.deleted && <Notice tone="success">Batch deleted.</Notice>}
+      {(() => {
+        const due = batches.filter((b) => isPastRetention(b.sale_window_end, today) && videoCount.get(b.id));
+        const count = due.reduce((n, b) => n + (videoCount.get(b.id) ?? 0), 0);
+        if (count === 0) return null;
+        return (
+          <div className="mb-6 rounded-md border border-barind-rust/50 bg-barind-rust/5 px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="font-body text-body-m text-ink-black">
+              {count} uploaded video{count === 1 ? " is" : "s are"} past the {VIDEO_RETENTION_DAYS_AFTER_WINDOW}-day
+              retention after the sale window ({due.map((b) => b.batch_code).join(", ")}). They&rsquo;re deleted
+              automatically each night, or remove them now.
+            </p>
+            <PurgeButton count={count} />
+          </div>
+        );
+      })()}
       {error && (
         <Notice tone="error">
           Couldn&rsquo;t load batches: {error.message}. Check the Supabase connection and try again.
@@ -167,6 +193,16 @@ export default async function ProductionDashboard({ searchParams }: PageProps<"/
                         )}
                         {window && <span>Window {window}</span>}
                         <span>Updated {formatTimestamp(b.updated_at, true)}</span>
+                        {(videoCount.get(b.id) ?? 0) > 0 && (
+                          <span className={isPastRetention(b.sale_window_end, today) ? "text-barind-rust" : undefined}>
+                            {videoCount.get(b.id)} video{videoCount.get(b.id) === 1 ? "" : "s"}
+                            {b.sale_window_end
+                              ? isPastRetention(b.sale_window_end, today)
+                                ? " · due for deletion"
+                                : ` · kept until ${formatDate(videosKeptUntil(b.sale_window_end)!)}`
+                              : " · kept (no sale window end)"}
+                          </span>
+                        )}
                       </p>
                       {flags.includes("expired_window") && (
                         <p className="mt-2 font-body text-caption text-barind-rust">

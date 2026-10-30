@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { batchPath, batchUrl } from "../../../lib/production/format";
+import { batchPath, batchUrl, formatDate } from "../../../lib/production/format";
+import { VIDEO_RETENTION_DAYS_AFTER_WINDOW, isPastRetention, videosKeptUntil } from "../../../lib/production/retention";
 import { ShareBatch } from "../../../components/production/ShareBatch";
 import type { BatchRow, BatchStatus } from "../../../lib/production/types";
 import { deleteBatch, setBatchPublished, setBatchStatus } from "../actions";
@@ -48,6 +49,25 @@ export function BatchControls({ batch }: { batch: BatchRow }) {
           aria-hidden="true"
         />
         {vis.text}
+      </p>
+
+      <p className="mt-4 font-body text-caption text-steel-mesh">
+        <span className="font-mono uppercase tracking-wider">Video storage · </span>
+        {batch.sale_window_end ? (
+          isPastRetention(batch.sale_window_end) ? (
+            <span className="text-barind-rust">
+              Past retention — uploaded videos are deleted at the next nightly clean-up. Extend the sale window to keep them.
+            </span>
+          ) : (
+            <>
+              Uploaded videos are kept until{" "}
+              <strong className="font-medium text-ink-black">{formatDate(videosKeptUntil(batch.sale_window_end)!)}</strong>{" "}
+              (sale window end + {VIDEO_RETENTION_DAYS_AFTER_WINDOW} days), then deleted automatically.
+            </>
+          )
+        ) : (
+          <>No sale window end set — uploaded videos are kept until you set one.</>
+        )}
       </p>
 
       <div className="mt-4 rounded-md border border-steel-mesh/20 bg-ivory-shell/60 p-3">

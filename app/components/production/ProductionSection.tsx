@@ -117,7 +117,7 @@ export async function ProductionSection() {
                 title={loadFailed ? "Live availability is offline right now." : "No batches open for sale right now."}
                 body={
                   loadFailed
-                    ? "We couldn't load current stock. Call or WhatsApp the farm for today's availability."
+                    ? "We couldn't load current stock. Call, WhatsApp or Imo the farm for today's availability."
                     : "The current flock is still growing. See upcoming batches below, or ask us when the next one is ready."
                 }
               />

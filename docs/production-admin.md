@@ -74,15 +74,17 @@ A signed-in account that is not on the allowlist sees "not an authorised adminis
 
 ## 4. Environment variables
 
-Copy `.env.example` to `.env.local` for local development, and set the same two variables in Vercel (Project → Settings → Environment Variables, for Production and Preview):
+Copy `.env.example` to `.env.local` for local development, and set the same variables in Vercel (Project → Settings → Environment Variables, for Production and Preview):
 
 | Variable | Value |
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Project URL, e.g. `https://abcd.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key (or set `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the legacy anon key) |
 | `NEXT_PUBLIC_SITE_URL` | Optional. Public origin for canonical URLs, the sitemap and shared batch links. Defaults to `https://farms.zerod.bd` |
+| `SUPABASE_SECRET_KEY` | **Server-only.** Secret key (`sb_secret_…`; or set `SUPABASE_SERVICE_ROLE_KEY` to the legacy service_role key). Used only by the nightly video clean-up. Production environment only. |
+| `CRON_SECRET` | **Server-only.** Random string (`openssl rand -hex 32`) that authorises the clean-up job. Vercel Cron sends it automatically. |
 
-The service-role/secret key is **not used anywhere**. Do not add it.
+The secret key bypasses RLS. It is read in exactly one place, `app/lib/supabase/service.ts`, which is marked `server-only`, so importing it from browser code fails the build. Never give it a `NEXT_PUBLIC_` name. Everything else in the app still runs with the publishable key plus RLS.
 
 If the variables are missing, the site still builds and the Production section shows its "call the farm" empty states.
 
@@ -104,6 +106,29 @@ Push to the branch Vercel deploys from. The homepage, the batch pages and the si
 - **Posters** are generated automatically from about 1 second into each uploaded video. To pick a better one, pause the admin preview on the frame you want and click **Use current frame as poster**, or upload an image. If a browser can't decode a file (some iPhone HEVC `.mov` files on Chrome), the upload still succeeds and the item shows a note asking for a manual poster.
 - Everything here works on a **published** batch too. New videos, replacements and reordering go live on the homepage and the batch's shared link without republishing.
 - All dates are Bangladesh calendar dates; timestamps are shown in Asia/Dhaka time.
+
+## Video retention (automatic deletion)
+
+Uploaded videos are stored only for the **sale window plus 2 days** (Bangladesh dates):
+
+- If a sale window ends on 10 Nov, its videos are kept through 12 Nov and deleted from 13 Nov.
+- Posters are deleted with their videos. **Photos and external links (YouTube…) are kept.** They cost little or nothing to store.
+- Batches **without a sale window end are never purged**. Set one, or remove videos yourself.
+- Extending the sale window before the deletion date keeps the videos. Changing the rule is a single constant, `VIDEO_RETENTION_DAYS_AFTER_WINDOW` in `app/lib/production/retention.ts`.
+
+How it runs:
+
+- **Nightly job:** `vercel.json` schedules `GET /api/cron/purge-expired-media` daily at 21:00 UTC (03:00 in Bangladesh). It needs `SUPABASE_SECRET_KEY` and `CRON_SECRET` in the Vercel **Production** environment, and Vercel only runs cron jobs on production deployments. On the Hobby plan, Vercel may run it at any point within that hour.
+- **Admin panel:** each batch shows "Uploaded videos are kept until …". Rows due for deletion are flagged, and the dashboard shows a **Remove now** button when anything is past retention. That button works even before the nightly job is set up.
+- Files are deleted before database rows. If storage fails, the rows stay and the next run retries, so nothing is orphaned silently.
+
+Deletion is permanent. Download any footage you want to keep before the date shown.
+
+To run the job by hand, for example after deploying:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" https://farms.zerod.bd/api/cron/purge-expired-media
+```
 
 ## Batch pages and sharing
 
