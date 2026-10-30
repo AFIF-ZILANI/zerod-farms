@@ -94,3 +94,67 @@ export async function uploadToStorage(
 
   return path;
 }
+
+/**
+ * Grabs one frame of a video as a JPEG poster. Works on a local File (object
+ * URL) right after upload, or on a signed Storage URL — Supabase serves those
+ * with CORS headers, so the canvas isn't tainted. Rejects if the browser
+ * can't decode the format (e.g. some MOV/HEVC files on Chrome).
+ */
+export function captureVideoFrame(source: File | string, atSeconds?: number): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = typeof source === "string" ? null : URL.createObjectURL(source);
+    const video = document.createElement("video");
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+    if (!objectUrl) video.crossOrigin = "anonymous";
+
+    const cleanup = () => {
+      clearTimeout(timer);
+      video.removeAttribute("src");
+      video.load();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+    const fail = (msg: string) => {
+      cleanup();
+      reject(new Error(msg));
+    };
+    const timer = setTimeout(() => fail("Timed out reading the video."), 20000);
+
+    video.onerror = () => fail("This browser can't read the video to make a poster.");
+    video.onloadedmetadata = () => {
+      // Default to ~1s in (past black first frames), clamped to the clip.
+      const t = atSeconds ?? Math.min(1, (video.duration || 2) / 2);
+      video.currentTime = Math.max(0, Math.min(t, (video.duration || t) - 0.05));
+    };
+    video.onseeked = () => {
+      const w = video.videoWidth;
+      const h = video.videoHeight;
+      if (!w || !h) return fail("The video has no picture to capture.");
+      // Cap the poster at 1280px wide — plenty for cards, light on mobile data.
+      const scale = Math.min(1, 1280 / w);
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return fail("Couldn't draw the frame.");
+      try {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      } catch {
+        return fail("Couldn't read the frame.");
+      }
+      canvas.toBlob(
+        (blob) => {
+          cleanup();
+          if (!blob) return reject(new Error("Couldn't encode the poster."));
+          resolve(new File([blob], "poster.jpg", { type: "image/jpeg" }));
+        },
+        "image/jpeg",
+        0.82
+      );
+    };
+
+    video.src = objectUrl ?? (source as string);
+  });
+}

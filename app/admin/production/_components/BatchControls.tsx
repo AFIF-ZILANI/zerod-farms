@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
+import { batchPath, batchUrl } from "../../../lib/production/format";
+import { ShareBatch } from "../../../components/production/ShareBatch";
 import type { BatchRow, BatchStatus } from "../../../lib/production/types";
 import { deleteBatch, setBatchPublished, setBatchStatus } from "../actions";
 import type { ActionState } from "../validation";
@@ -46,6 +49,36 @@ export function BatchControls({ batch }: { batch: BatchRow }) {
         />
         {vis.text}
       </p>
+
+      <div className="mt-4 rounded-md border border-steel-mesh/20 bg-ivory-shell/60 p-3">
+        <p className="font-mono text-caption text-steel-mesh uppercase tracking-widest">Batch link</p>
+        <p className="mt-1 font-mono text-caption text-ink-black break-all">{batchUrl(batch.batch_code)}</p>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          {vis.live && (batch.status === "upcoming" || batch.status === "available") ? (
+            <ShareBatch batchCode={batch.batch_code} breed={batch.breed} status={batch.status} placement="down" />
+          ) : (
+            <span className="font-body text-caption text-steel-mesh">
+              Sharing unlocks once the batch is live — the link shows &ldquo;not listed&rdquo; until then.
+            </span>
+          )}
+          <Link
+            href={`/admin/production/${batch.id}/preview`}
+            className="font-mono text-caption uppercase tracking-wider text-ink-black underline underline-offset-4 decoration-barind-rust/40 hover:decoration-barind-rust"
+          >
+            Preview page
+          </Link>
+          {vis.live && (
+            <a
+              href={batchPath(batch.batch_code)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-caption uppercase tracking-wider text-ink-black underline underline-offset-4 decoration-barind-rust/40 hover:decoration-barind-rust"
+            >
+              Open live page ↗
+            </a>
+          )}
+        </div>
+      </div>
 
       <div className="mt-5 flex flex-col gap-2">
         {batch.is_published ? (

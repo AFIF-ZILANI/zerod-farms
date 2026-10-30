@@ -5,6 +5,8 @@ export interface ActionState {
   error?: string;
   fieldErrors?: Record<string, string>;
   message?: string;
+  /** Id of a row the action created (e.g. new media), for follow-up steps. */
+  id?: string;
 }
 
 export interface BatchInput {

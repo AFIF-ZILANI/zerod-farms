@@ -47,6 +47,7 @@ app/
   components/            # SectionHeader, Card, Button, AnimateOnScroll, SectionDivider
   components/production/ # Production & Wholesale Availability section, batch cards, media player
   admin/                 # /admin/login and /admin/production (batches, media, publishing)
+  production/[code]/     # permanent, shareable batch pages
   media/[id]/route.ts    # published-only media → short-lived signed URL
   globals.css            # Tailwind theme — design tokens (color, type scale)
   sitemap.ts
@@ -58,7 +59,7 @@ public/
 
 ## Production & wholesale availability
 
-The homepage `#production` section shows batches **available for sale** and **upcoming wholesale sales**, with real farm videos and WhatsApp/phone enquiry buttons. It's a B2B enquiry tool — no prices, cart, checkout or customer accounts.
+The homepage `#production` section shows batches **available for sale** and **upcoming wholesale sales**, with real farm videos and WhatsApp/phone enquiry buttons. Each published batch also has a shareable page at `/production/<CODE>` with all its videos and a **Share Batch** menu (native share, WhatsApp, copy link). It's a B2B enquiry tool — no prices, cart, checkout or customer accounts.
 
 Setup (Supabase project, migration, first admin account, env vars, deployment) and day-to-day use are in **[docs/production-admin.md](docs/production-admin.md)**.
 

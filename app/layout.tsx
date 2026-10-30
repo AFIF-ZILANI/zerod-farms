@@ -141,7 +141,7 @@ export const metadata: Metadata = {
     title: "ZeroD Farms — Poultry Farm in Naogaon, Bangladesh",
     description:
       "ZeroD Farms is a poultry operation in Mahadebpur, Naogaon — 5 sheds, 10,000-bird capacity.",
-    url: "https://zerodfarms.vercel.app",
+    url: SITE_URL,
     locale: "en_US",
     siteName: "ZeroD Farms",
     images: [
@@ -158,7 +158,7 @@ export const metadata: Metadata = {
       "ZeroD Farms is a poultry operation in Mahadebpur, Naogaon — 5 sheds, 10,000-bird capacity.",
     images: ["/images/hero.webp"],
   },
-  metadataBase: new URL("https://zerodfarms.vercel.app"),
+  metadataBase: new URL(SITE_URL),
 };
 
 export default function RootLayout({

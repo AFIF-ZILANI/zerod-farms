@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition, type FormEvent } from "react";
+import { useRef, useState, useTransition, type FormEvent, type Ref } from "react";
 import type { MediaRow } from "../../../lib/production/types";
 import { formatDate } from "../../../lib/production/format";
 import { classifyExternalVideo } from "../../../lib/production/video";
@@ -8,6 +8,7 @@ import {
   addMedia,
   deleteMedia,
   moveMedia,
+  replaceMediaSource,
   setMediaPoster,
   setPrimaryMedia,
   updateMediaDetails,
@@ -19,6 +20,7 @@ import {
   MAX_IMAGE_BYTES,
   MAX_VIDEO_BYTES,
   VIDEO_TYPES,
+  captureVideoFrame,
   formatBytes,
   mediaTypeOf,
   uploadToStorage,
@@ -43,8 +45,25 @@ export interface AdminMedia extends MediaRow {
 interface UploadJob {
   name: string;
   progress: number;
-  status: "uploading" | "saving" | "done" | "error";
+  status: "uploading" | "saving" | "poster" | "done" | "error";
   error?: string;
+  note?: string;
+}
+
+/**
+ * Makes a poster from the first second of a freshly uploaded video and
+ * attaches it. Best-effort: the video is already saved, so a failure here
+ * only means the admin adds a poster by hand.
+ */
+async function attachAutoPoster(batchId: string, mediaId: string, file: File | string, atSeconds?: number): Promise<string | null> {
+  try {
+    const poster = await captureVideoFrame(file, atSeconds);
+    const path = await uploadToStorage(batchId, poster, () => {}, "poster-");
+    const res = await setMediaPoster(mediaId, path);
+    return res.error ?? null;
+  } catch (err) {
+    return err instanceof Error ? err.message : "Couldn't make a poster.";
+  }
 }
 
 export function MediaManager({ batchId, media }: { batchId: string; media: AdminMedia[] }) {
@@ -58,8 +77,9 @@ export function MediaManager({ batchId, media }: { batchId: string; media: Admin
           Videos &amp; photos
         </h2>
         <p className="font-body text-body-m text-steel-mesh mt-1 max-w-2xl">
-          Real footage of this batch sells it. The main video leads the card on the website; the cover
-          image is used as its thumbnail when a video has no poster of its own.
+            Real footage of this batch sells it. Add, replace or reorder videos at any time — on a
+          published batch, changes go live on the website and its shared link straight away. A poster
+          is made automatically from each uploaded video; replace it with a better frame if you like.
         </p>
       </div>
 
@@ -107,8 +127,14 @@ function Uploader({ batchId }: { batchId: string }) {
           caption,
           recordedAt,
         });
-        if (res.error) throw new Error(res.error);
-        update(i, { status: "done" });
+        if (res.error || !res.id) throw new Error(res.error ?? "Couldn't save the upload.");
+        if (mediaTypeOf(file) === "video") {
+          update(i, { status: "poster" });
+          const posterError = await attachAutoPoster(batchId, res.id, file);
+          update(i, { status: "done", note: posterError ? `Saved — no automatic poster (${posterError}) Add one below.` : undefined });
+        } else {
+          update(i, { status: "done" });
+        }
       } catch (err) {
         update(i, { status: "error", error: err instanceof Error ? err.message : "Upload failed." });
       }
@@ -165,6 +191,7 @@ function Uploader({ batchId }: { batchId: string }) {
                 <span className={job.status === "error" ? "text-barind-rust" : "text-steel-mesh"}>
                   {job.status === "uploading" && `${Math.round(job.progress * 100)}%`}
                   {job.status === "saving" && "Saving…"}
+                  {job.status === "poster" && "Making poster…"}
                   {job.status === "done" && "Done"}
                   {job.status === "error" && "Failed"}
                 </span>
@@ -183,6 +210,7 @@ function Uploader({ batchId }: { batchId: string }) {
                 />
               </div>
               {job.error && <p className="mt-1 font-body text-caption text-barind-rust">{job.error}</p>}
+              {job.note && <p className="mt-1 font-body text-caption text-steel-mesh">{job.note}</p>}
             </li>
           ))}
         </ul>
@@ -268,7 +296,7 @@ function MediaGroup({ title, emptyText, items }: { title: string; emptyText: str
   );
 }
 
-function Preview({ item }: { item: AdminMedia }) {
+function Preview({ item, videoRef }: { item: AdminMedia; videoRef?: Ref<HTMLVideoElement> }) {
   const base = "h-full w-full object-cover bg-ink-black";
   if (item.media_type === "image") {
     return item.previewUrl ? (
@@ -279,7 +307,18 @@ function Preview({ item }: { item: AdminMedia }) {
     );
   }
   if (item.previewUrl) {
-    return <video src={item.previewUrl} poster={item.posterUrl ?? undefined} controls preload="metadata" playsInline className={`${base} object-contain`} />;
+    return (
+      <video
+        ref={videoRef}
+        src={item.previewUrl}
+        poster={item.posterUrl ?? undefined}
+        crossOrigin="anonymous"
+        controls
+        preload="metadata"
+        playsInline
+        className={`${base} object-contain`}
+      />
+    );
   }
   if (item.external_url) {
     const ext = classifyExternalVideo(item.external_url);
@@ -306,7 +345,12 @@ function MediaItem({ item, isFirst, isLast }: { item: AdminMedia; isFirst: boole
   const [caption, setCaption] = useState(item.caption ?? "");
   const [recordedAt, setRecordedAt] = useState(item.recorded_at ?? "");
   const [posterProgress, setPosterProgress] = useState<number | null>(null);
+  const [replaceProgress, setReplaceProgress] = useState<number | null>(null);
+  const [editingLink, setEditingLink] = useState(false);
+  const [link, setLink] = useState(item.external_url ?? "");
   const posterInput = useRef<HTMLInputElement>(null);
+  const replaceInput = useRef<HTMLInputElement>(null);
+  const previewVideo = useRef<HTMLVideoElement>(null);
 
   const dirty = caption !== (item.caption ?? "") || recordedAt !== (item.recorded_at ?? "");
   const isVideo = item.media_type === "video";
@@ -336,13 +380,51 @@ function MediaItem({ item, isFirst, isLast }: { item: AdminMedia; isFirst: boole
     }
   }
 
-  const busy = pending || posterProgress !== null;
+  // Replace the file behind this item; caption, date, order and main/cover
+  // status stay as they are. A new video also gets a fresh poster, since the
+  // old one shows different footage.
+  async function onReplaceChosen(file: File | undefined) {
+    if (!file) return;
+    const problem = validateFile(file, isVideo ? "video" : "image");
+    if (problem) {
+      setResult({ error: problem });
+      return;
+    }
+    try {
+      setReplaceProgress(0);
+      const path = await uploadToStorage(item.batch_id, file, setReplaceProgress);
+      const res = await replaceMediaSource(item.id, { storagePath: path });
+      if (res.error) throw new Error(res.error);
+      if (isVideo) {
+        const posterError = await attachAutoPoster(item.batch_id, item.id, file);
+        setResult(posterError ? { ok: true, message: `File replaced. No automatic poster (${posterError}) — add one.` } : res);
+      } else {
+        setResult(res);
+      }
+    } catch (err) {
+      setResult({ error: err instanceof Error ? err.message : "Replace failed." });
+    } finally {
+      setReplaceProgress(null);
+      if (replaceInput.current) replaceInput.current.value = "";
+    }
+  }
+
+  async function captureCurrentFrame() {
+    if (!item.previewUrl) return;
+    const at = previewVideo.current?.currentTime;
+    setPosterProgress(0);
+    const posterError = await attachAutoPoster(item.batch_id, item.id, item.previewUrl, at && at > 0 ? at : undefined);
+    setPosterProgress(null);
+    setResult(posterError ? { error: `Couldn't capture the frame: ${posterError}` } : { ok: true, message: "Poster set from the video." });
+  }
+
+  const busy = pending || posterProgress !== null || replaceProgress !== null;
 
   return (
     <li className={`${panelClass} p-3 sm:p-4 ${busy ? "opacity-80" : ""}`} aria-busy={busy}>
       <div className="grid gap-4 sm:grid-cols-[13rem_1fr]">
         <div className="relative aspect-video overflow-hidden rounded-md">
-          <Preview item={item} />
+          <Preview item={item} videoRef={previewVideo} />
           {item.is_primary && (
             <span className="pointer-events-none absolute top-2 left-2 rounded-sm bg-barind-rust px-2 py-0.5 font-mono text-caption uppercase tracking-wider text-ivory-shell">
               {isVideo ? "Main video" : "Cover"}
@@ -416,6 +498,57 @@ function MediaItem({ item, isFirst, isLast }: { item: AdminMedia; isFirst: boole
               Remove
             </ConfirmButton>
           </div>
+
+          <div className="mt-1 flex flex-wrap items-center gap-1 border-t border-steel-mesh/10 pt-1">
+            <input
+              ref={replaceInput}
+              type="file"
+              accept={(isVideo ? VIDEO_TYPES : IMAGE_TYPES).join(",")}
+              className="sr-only"
+              id={`replace-${item.id}`}
+              onChange={(e) => onReplaceChosen(e.target.files?.[0])}
+              disabled={busy}
+            />
+            <label htmlFor={`replace-${item.id}`} className={`${ghostButtonClass} cursor-pointer`}>
+              {replaceProgress !== null ? `Uploading ${Math.round(replaceProgress * 100)}%` : item.external_url ? "Replace with upload" : "Replace file"}
+            </label>
+            {item.external_url && (
+              <button type="button" disabled={busy} onClick={() => setEditingLink((v) => !v)} className={ghostButtonClass} aria-expanded={editingLink}>
+                Edit link
+              </button>
+            )}
+            {isVideo && item.previewUrl && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={captureCurrentFrame}
+                className={ghostButtonClass}
+                title="Pause the preview on the frame you want, then click"
+              >
+                Use current frame as poster
+              </button>
+            )}
+          </div>
+
+          {editingLink && (
+            <form
+              className="mt-2 flex flex-col gap-2 sm:flex-row"
+              onSubmit={(e) => {
+                e.preventDefault();
+                run(async () => {
+                  const res = await replaceMediaSource(item.id, { externalUrl: link });
+                  if (res.ok) setEditingLink(false);
+                  return res;
+                });
+              }}
+            >
+              <label htmlFor={`link-${item.id}`} className="sr-only">Video URL</label>
+              <input id={`link-${item.id}`} type="url" required value={link} onChange={(e) => setLink(e.target.value)} className={inputClass} disabled={busy} />
+              <button type="submit" disabled={busy} className={`${secondaryButtonClass} shrink-0`}>
+                Save link
+              </button>
+            </form>
+          )}
 
           {result?.error && <p role="alert" className="mt-2 font-body text-caption text-barind-rust">{result.error}</p>}
           {result?.ok && result.message && <p role="status" className="mt-2 font-body text-caption text-steel-mesh">{result.message}</p>}

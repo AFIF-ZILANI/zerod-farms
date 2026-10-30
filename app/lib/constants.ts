@@ -1,5 +1,6 @@
-// Canonical origin used for metadata, sitemap and structured data.
-export const SITE_URL = "https://zerodfarms.vercel.app";
+// Canonical origin used for metadata, sitemap, structured data and shared
+// batch links. Override per environment with NEXT_PUBLIC_SITE_URL.
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://farms.zerod.bd").replace(/\/+$/, "");
 
 export const SITE = {
   name: "ZeroD Farms",
@@ -27,10 +28,10 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Production", href: "#production" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Our Farm", href: "#farm" },
-  { label: "Contact", href: "#contact" },
+  { label: "Production", href: "/#production" },
+  { label: "Gallery", href: "/#gallery" },
+  { label: "Our Farm", href: "/#farm" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 export const PRODUCTION_CARDS = [

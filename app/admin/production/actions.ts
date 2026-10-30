@@ -22,6 +22,10 @@ const NOT_AUTHORISED: ActionState = {
 
 function refresh(batchId?: string) {
   revalidatePath("/");
+  // Every public batch page and the sitemap (codes, availability and media
+  // can all change here).
+  revalidatePath("/production/[code]", "page");
+  revalidatePath("/sitemap.xml");
   revalidatePath("/admin/production");
   if (batchId) revalidatePath(`/admin/production/${batchId}`);
 }
@@ -55,6 +59,23 @@ export async function updateBatch(batchId: string, _prev: ActionState, form: For
 
   const parsed = parseBatchForm(form);
   if (!parsed.ok) return { fieldErrors: parsed.fieldErrors, error: "Check the highlighted fields." };
+
+  // The code is the batch's public URL. Once buyers may have the link, it
+  // must not change underneath them.
+  const { data: current, error: currentError } = await supabase
+    .from("production_batches")
+    .select("batch_code, is_published")
+    .eq("id", batchId)
+    .single();
+  if (currentError) return describeDbError(currentError);
+  if (current.is_published && current.batch_code !== parsed.data.batch_code) {
+    return {
+      error: "Check the highlighted fields.",
+      fieldErrors: {
+        batch_code: `This batch is published, so its link (/production/${current.batch_code}) may already be shared. Unpublish it first if you really need a new code.`,
+      },
+    };
+  }
 
   const { error } = await supabase.from("production_batches").update(parsed.data).eq("id", batchId);
   if (error) return describeDbError(error);
@@ -188,16 +209,20 @@ export async function addMedia(batchId: string, input: NewMediaInput): Promise<A
   const nextOrder = Math.max(-1, ...(existing ?? []).map((m) => m.display_order)) + 1;
   const hasPrimary = (existing ?? []).some((m) => m.media_type === input.mediaType && m.is_primary);
 
-  const { error } = await supabase.from("production_media").insert({
-    batch_id: batchId,
-    media_type: input.mediaType,
-    storage_path,
-    external_url,
-    caption,
-    recorded_at: input.recordedAt || null,
-    display_order: nextOrder,
-    is_primary: !hasPrimary,
-  });
+  const { data: inserted, error } = await supabase
+    .from("production_media")
+    .insert({
+      batch_id: batchId,
+      media_type: input.mediaType,
+      storage_path,
+      external_url,
+      caption,
+      recorded_at: input.recordedAt || null,
+      display_order: nextOrder,
+      is_primary: !hasPrimary,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     // Don't leave an orphaned upload behind if the row couldn't be saved.
@@ -206,7 +231,7 @@ export async function addMedia(batchId: string, input: NewMediaInput): Promise<A
   }
 
   refresh(batchId);
-  return { ok: true, message: input.mediaType === "video" ? "Video added." : "Image added." };
+  return { ok: true, id: inserted.id, message: input.mediaType === "video" ? "Video added." : "Image added." };
 }
 
 async function getMedia(supabase: NonNullable<Awaited<ReturnType<typeof adminClient>>>, mediaId: string) {
@@ -319,6 +344,49 @@ export async function moveMedia(mediaId: string, direction: "up" | "down"): Prom
 
   refresh(media.batch_id);
   return { ok: true };
+}
+
+// Swaps the file (or link) behind an existing media item, keeping its
+// caption, recording date, position and main/cover status. The public URL
+// carries a version that changes with every media edit, so buyers get the new
+// file straight away rather than a cached redirect to the old one.
+export async function replaceMediaSource(
+  mediaId: string,
+  source: { storagePath: string } | { externalUrl: string }
+): Promise<ActionState> {
+  const supabase = await adminClient();
+  if (!supabase) return NOT_AUTHORISED;
+
+  const { data: media, error: getError } = await getMedia(supabase, mediaId);
+  if (getError) return describeDbError(getError);
+
+  let patch: { storage_path: string | null; external_url: string | null };
+  if ("storagePath" in source) {
+    if (!source.storagePath.startsWith(`${media.batch_id}/`)) return { error: "Upload path doesn't belong to this batch." };
+    patch = { storage_path: source.storagePath, external_url: null };
+  } else {
+    if (media.media_type !== "video") return { error: "Only videos can use an external link." };
+    try {
+      const url = new URL(source.externalUrl.trim());
+      if (url.protocol !== "https:") return { error: "External links must start with https://" };
+      patch = { storage_path: null, external_url: url.toString() };
+    } catch {
+      return { error: "That doesn't look like a valid URL." };
+    }
+  }
+
+  const { error } = await supabase.from("production_media").update(patch).eq("id", mediaId);
+  if (error) {
+    if (patch.storage_path) await supabase.storage.from(MEDIA_BUCKET).remove([patch.storage_path]);
+    return describeDbError(error);
+  }
+  if (media.storage_path && media.storage_path !== patch.storage_path) {
+    const { error: removeError } = await supabase.storage.from(MEDIA_BUCKET).remove([media.storage_path]);
+    if (removeError) console.error("[production] replaced media but old file removal failed", removeError);
+  }
+
+  refresh(media.batch_id);
+  return { ok: true, message: "storagePath" in source ? "File replaced." : "Link updated." };
 }
 
 export async function deleteMedia(mediaId: string): Promise<ActionState> {

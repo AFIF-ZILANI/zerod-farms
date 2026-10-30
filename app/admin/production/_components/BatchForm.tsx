@@ -103,7 +103,7 @@ export function BatchForm({ action, batch, submitLabel }: BatchFormProps) {
       )}
 
       <Fieldset legend="Batch details" description="What buyers see first on the card.">
-        <Field name="batch_code" label="Batch code" hint="Unique, e.g. ZD-2026-11. Used in WhatsApp enquiries." error={fe.batch_code}>
+        <Field name="batch_code" label="Batch code" hint="Unique, e.g. ZD-2026-11. It becomes the batch link (/production/ZD-2026-11) and is locked while published." error={fe.batch_code}>
           <input {...props("batch_code")} defaultValue={val(batch?.batch_code)} required maxLength={32} className={`${inputClass} font-mono uppercase`} placeholder="ZD-2026-11" />
         </Field>
         <Field name="status" label="Status" error={fe.status} hint="Upcoming = still being raised. Available = ready to sell.">

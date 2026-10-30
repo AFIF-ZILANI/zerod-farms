@@ -2,16 +2,21 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { NAV_LINKS } from "../lib/constants";
 
 const NAV_HEIGHT = 48; // h-12 — kept in sync with the bar height below
 
-export function Nav() {
+// `solid` renders the opaque bar from the first paint — for pages without a
+// dark hero behind the nav (e.g. batch pages), where the transparent state
+// would put light text on a light background until hydration.
+export function Nav({ solid: alwaysSolid = false }: { solid?: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(alwaysSolid);
 
   // Transparent while the hero sits behind the bar; solid once it's scrolled past.
   useEffect(() => {
+    if (alwaysSolid) return;
     const hero = document.getElementById("hero");
     if (!hero) {
       // No hero on this route → always solid (deferred to keep the effect pure).
@@ -24,7 +29,7 @@ export function Nav() {
     );
     io.observe(hero);
     return () => io.disconnect();
-  }, []);
+  }, [alwaysSolid]);
 
   // Solid look also while the mobile menu is open, so bar + panel read as one.
   const solid = scrolled || mobileMenuOpen;
@@ -71,7 +76,7 @@ export function Nav() {
       />
 
       <div className="relative max-w-content mx-auto px-6 h-12 flex items-center justify-between">
-        <a href="#" className="inline-flex items-center" aria-label="ZeroD Farms — home">
+        <Link href="/" className="inline-flex items-center" aria-label="ZeroD Farms — home">
           <Image
             src="/zerod-farms-logo.svg"
             alt="ZeroD Farms"
@@ -79,7 +84,7 @@ export function Nav() {
             height={30}
             className={`transition duration-500 ${solid ? "" : "invert"}`}
           />
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">

@@ -1,4 +1,4 @@
-import { SITE } from "../constants";
+import { SITE, SITE_URL } from "../constants";
 
 export const FARM_TIME_ZONE = "Asia/Dhaka";
 
@@ -69,4 +69,41 @@ export function batchEnquiryMessage(batchCode: string, title?: string): string {
 /** wa.me link with a pre-filled message — works in the app on mobile and WhatsApp Web on desktop. */
 export function whatsappLink(message: string): string {
   return `${SITE.whatsapp}?text=${encodeURIComponent(message)}`;
+}
+
+/** Permanent, shareable path of a batch page. Codes are stored uppercase. */
+export function batchPath(batchCode: string): string {
+  return `/production/${encodeURIComponent(batchCode.toUpperCase())}`;
+}
+
+export function batchUrl(batchCode: string): string {
+  return `${SITE_URL}${batchPath(batchCode)}`;
+}
+
+export function availabilityLabel(status: "upcoming" | "available"): string {
+  return status === "available" ? "Available for Sale" : "Upcoming Wholesale Sale (estimated)";
+}
+
+/** The message buyers receive when a batch is shared (WhatsApp / native share). */
+export function batchShareMessage(batch: {
+  batchCode: string;
+  breed: string;
+  status: "upcoming" | "available";
+}): string {
+  return [
+    "ZeroD Farms – Wholesale Production Update",
+    `Batch: ${batch.batchCode}`,
+    `Breed: ${batch.breed}`,
+    `Availability: ${availabilityLabel(batch.status)}`,
+    "",
+    "Watch our actual farm production videos and view batch details:",
+    batchUrl(batch.batchCode),
+    "",
+    "For wholesale purchasing enquiries, contact ZeroD Farms directly.",
+  ].join("\n");
+}
+
+/** WhatsApp share without a fixed recipient — the sender picks the chat. */
+export function whatsappShareLink(message: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }
